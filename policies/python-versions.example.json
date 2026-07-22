@@ -1,0 +1,10 @@
+{
+  "version": 1,
+  "mode": "warn",
+  "allowed": [
+    "3.11",
+    "3.12",
+    "3.13"
+  ],
+  "notes": "Copy to %LOCALAPPDATA%\\uvdrop\\policies\\python-versions.json. mode: warn | block"
+}

@@ -1,0 +1,12 @@
+{
+  "version": 1,
+  "mode": "warn",
+  "packages": [
+    "requests",
+    "httpx",
+    "pydantic",
+    "rich",
+    "typer"
+  ],
+  "notes": "Copy to %LOCALAPPDATA%\\uvdrop\\policies\\allowlist.json or point Settings at this file. mode: warn | block"
+}

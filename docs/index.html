@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>uvdrop — 実務向けオフライン uv ランチャー</title>
+  <meta name="description" content="フォルダや ZIP を渡すと、uv で専用 .env を用意して Python アプリを起動するオフライン向けランチャー。" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="bg"></div>
+  <header class="top">
+    <a class="brand" href="./">uvdrop</a>
+    <nav>
+      <a href="#features">機能</a>
+      <a href="#usage">使い方</a>
+      <a href="#ops">運営</a>
+      <a href="#roadmap">ロードマップ</a>
+      <a href="#changelog">リリース</a>
+      <a class="gh" href="https://github.com/uvdrop/uvdrop">GitHub</a>
+    </nav>
+  </header>
+
+  <main>
+    <section class="hero">
+      <p class="eyebrow">Offline-first · Windows · MIT</p>
+      <h1 class="logo">uvdrop</h1>
+      <p class="tag">フォルダを渡して、すぐ動かす。<br />実務向けのオフライン uv ランチャー。</p>
+      <div class="cta">
+        <a class="btn primary" href="https://github.com/uvdrop/uvdrop">リポジトリを見る</a>
+        <a class="btn ghost" href="https://github.com/uvdrop/uvdrop/blob/main/CHANGELOG.md">CHANGELOG</a>
+      </div>
+      <p class="ver" id="site-version">current: v0.2.0</p>
+    </section>
+
+    <section id="features" class="block">
+      <h2>機能</h2>
+      <p class="lede">ポータルや Git 連携なし。ローカルの Python アプリを安全に起動することに絞っています。</p>
+      <ul class="grid">
+        <li>
+          <h3>Drop &amp; Run</h3>
+          <p>決まった階層の <code>pyproject.toml</code> があるフォルダ、または ZIP を選ぶと <code>uv sync</code> → <code>uv run</code>。</p>
+        </li>
+        <li>
+          <h3>専用 .env</h3>
+          <p>アプリ本体の外（AppData）に .env を保持し、起動前にワークスペースへコピーします。</p>
+        </li>
+        <li>
+          <h3>保持 / 一時実行</h3>
+          <p>保持は再起動とショートカット向き。一時実行はプロセス終了後にワークスペース・venv・.env を削除します。</p>
+        </li>
+        <li>
+          <h3>ローカルポリシー</h3>
+          <p>許可パッケージ・許可 Python バージョンを JSON でオフライン管理。xlsx URL 配信も可。</p>
+        </li>
+        <li>
+          <h3>OSV オプション</h3>
+          <p>設定で有効化すると OSV.dev の <code>MAL-*</code> を照会（warn / block）。</p>
+        </li>
+        <li>
+          <h3>デスクトップショートカット</h3>
+          <p>保持したアプリを Windows デスクトップから再起動できます。</p>
+        </li>
+      </ul>
+    </section>
+
+    <section id="usage" class="block">
+      <h2>使い方</h2>
+      <ol class="steps">
+        <li>
+          <strong>開発実行</strong>
+          <pre><code>git clone https://github.com/uvdrop/uvdrop.git
+cd uvdrop
+python -m uvdrop</code></pre>
+        </li>
+        <li>
+          <strong>uv の配置</strong>
+          <p>PATH の <code>uv</code>、または <code>resources/tools/windows-x64/uv.exe</code> に公式バイナリを置きます。</p>
+        </li>
+        <li>
+          <strong>アプリを渡す</strong>
+          <p>GUI でフォルダ / ZIP を選択。「起動後も保持する」をオフにすると一時実行になります。</p>
+        </li>
+        <li>
+          <strong>ポリシー</strong>
+          <p>初回起動で <code>%LOCALAPPDATA%\uvdrop\policies\</code> に例がコピーされます。編集するか、設定から xlsx URL / OSV を有効化。</p>
+        </li>
+        <li>
+          <strong>CLI</strong>
+          <pre><code>python -m uvdrop --cli path\to\app
+python -m uvdrop --cli path\to\app.zip --temp
+python -m uvdrop --version</code></pre>
+        </li>
+      </ol>
+    </section>
+
+    <section id="ops" class="block">
+      <h2>運営・データ配置</h2>
+      <p class="lede">インストールや監査で見る場所はここです。</p>
+      <table>
+        <thead>
+          <tr><th>パス</th><th>内容</th></tr>
+        </thead>
+        <tbody>
+          <tr><td><code>%LOCALAPPDATA%\uvdrop\apps\</code></td><td>展開・コピーしたワークスペース</td></tr>
+          <tr><td><code>%LOCALAPPDATA%\uvdrop\envs\</code></td><td>アプリごとの venv（uv）</td></tr>
+          <tr><td><code>%LOCALAPPDATA%\uvdrop\dotenv\</code></td><td>専用 .env の正本</td></tr>
+          <tr><td><code>%LOCALAPPDATA%\uvdrop\policies\</code></td><td>allowlist / python-versions / xlsx キャッシュ</td></tr>
+          <tr><td><code>%LOCALAPPDATA%\uvdrop\settings.json</code></td><td>OSV・xlsx URL など</td></tr>
+          <tr><td><code>%LOCALAPPDATA%\uvdrop\apps.json</code></td><td>保持アプリのレジストリ</td></tr>
+        </tbody>
+      </table>
+      <h3>ポリシーの優先</h3>
+      <ol>
+        <li>ローカル <code>allowlist.json</code></li>
+        <li>xlsx URL から同期したキャッシュ（設定有効時）</li>
+        <li>任意で OSV 脅威チェック</li>
+      </ol>
+      <p>許可リスト（運用）と OSV（脅威インテリ）は別レイヤです。混ぜず、両方を併用できます。</p>
+    </section>
+
+    <section id="roadmap" class="block">
+      <h2>ロードマップ</h2>
+      <ul class="roadmap">
+        <li><span class="done">done</span> オフライン起動核・Tk GUI・JSON ポリシー</li>
+        <li><span class="done">done</span> 一時実行の実削除・OSV / xlsx URL</li>
+        <li><span class="next">next</span> 署名付き Inno Setup インストーラ（Apps &amp; Features 登録）</li>
+        <li><span class="next">next</span> GitHub Releases への Setup.exe 配布</li>
+        <li><span class="later">later</span> GuardDog 詳細スキャン、xlsx の Python 版シート</li>
+      </ul>
+    </section>
+
+    <section id="changelog" class="block">
+      <h2>リリースノート</h2>
+      <article class="release">
+        <h3>v0.2.0 <time datetime="2026-07-22">2026-07-22</time></h3>
+        <ul>
+          <li>一時実行の終了後クリーンアップ</li>
+          <li>OSV / xlsx URL オプション</li>
+          <li>GUI にバージョン表示、Pages サイト、Inno 骨格</li>
+        </ul>
+      </article>
+      <article class="release">
+        <h3>v0.1.0 <time datetime="2026-07-22">2026-07-22</time></h3>
+        <ul>
+          <li>初版: フォルダ/ZIP → .env → uv sync/run、保持、ショートカット、ローカル JSON ポリシー</li>
+        </ul>
+      </article>
+      <p><a href="https://github.com/uvdrop/uvdrop/blob/main/CHANGELOG.md">全文は CHANGELOG.md</a></p>
+    </section>
+  </main>
+
+  <footer>
+    <p><strong>uvdrop</strong> · MIT License · <a href="https://github.com/uvdrop/uvdrop">github.com/uvdrop/uvdrop</a></p>
+  </footer>
+</body>
+</html>
