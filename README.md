@@ -9,6 +9,7 @@
 - リリースノート: [CHANGELOG.md](./CHANGELOG.md)
 - 現在のバージョン: **0.3.1**（GUI ヘッダーにも表示）
 - 配布3本柱: [docs/DISTRIBUTION.md](./docs/DISTRIBUTION.md)（Python / Inno / MSIX）
+- Store / Partner Center 手順: [docs/STORE_PARTNER_CENTER.md](./docs/STORE_PARTNER_CENTER.md)
 - Windows Inno 手順: [installer/PACKAGING.md](./installer/PACKAGING.md)
 - 第三者ライセンス: [THIRD_PARTY_NOTICES.md](./THIRD_PARTY_NOTICES.md)
 

@@ -2,6 +2,9 @@
 
 Do not change these unless Partner Center shows different values.
 
+These values **remain visible** in Partner Center for the app (Product / Package identity).
+They are not one-time-only. Still worth keeping a copy here for packaging.
+
 | Field | Value |
 |-------|--------|
 | Display / reserved name | uvdrop |
@@ -11,4 +14,6 @@ Do not change these unless Partner Center shows different values.
 | PFN | `kushi94.uvdrop_t252av2yrfja0` |
 | Store ID | `9PH385P01SK4` |
 
-Mirrored in `AppxManifest.xml`. Rebuild with `build-msix.ps1` after edits.
+Store web URL / deep link appear after the product is published (“available when the product is live” beforehand is normal).
+
+Mirrored in `AppxManifest.xml`. Full how-to: [docs/STORE_PARTNER_CENTER.md](../../docs/STORE_PARTNER_CENTER.md).
