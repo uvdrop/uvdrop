@@ -1,19 +1,23 @@
-# uvdrop installer
+# installer/
 
-Windows 向けは **Inno Setup の Setup.exe** を配布する想定です（素の PyInstaller 単体 exe は AV に拾われやすいため）。
+Windows 向け **Setup.exe** を作るための一式です。
 
-## 手順（概要）
+| ファイル | 役割 |
+|----------|------|
+| [PACKAGING.md](./PACKAGING.md) | **Inno 入門〜署名〜Release までの手順書（本命）** |
+| `build.ps1` | uv 取得 → PyInstaller → Inno コンパイル |
+| `fetch-uv.ps1` | 公式 `uv.exe` を `resources/tools/windows-x64/` へ |
+| `sign.ps1` | Authenticode 署名（任意） |
+| `uvdrop.iss` | Inno Setup スクリプト |
 
-1. [uv releases](https://github.com/astral-sh/uv/releases) から `uv.exe` を取得し `resources/tools/windows-x64/uv.exe` に配置
-2. `installer/build.ps1` で PyInstaller onedir ビルド
-3. Inno Setup 6 で `uvdrop.iss` をコンパイル → `installer/output/uvdrop-*-setup.exe`
-4. 可能なら Authenticode 署名
-5. GitHub Releases にアップロード
+## 最短
 
 ```powershell
-# from repo root
+# 未導入なら
+winget install --id JRSoftware.InnoSetup -e --accept-package-agreements --accept-source-agreements
+
+# リポジトリルートで
 powershell -ExecutionPolicy Bypass -File .\installer\build.ps1
-# then open uvdrop.iss in Inno Setup and Build
 ```
 
-Apps & Features に「uvdrop」として載るよう `AppId` / Uninstall 情報を `.iss` に定義済みです。
+出力: `installer/output/uvdrop-<version>-setup.exe`

@@ -115,6 +115,10 @@ main { max-width: 920px; margin: 0 auto; padding: 0 1.25rem 4rem; }
   font-size: 0.85rem;
   color: var(--accent);
 }
+.hero-dl {
+  margin: 0.5rem 0 0;
+  font-size: 0.95rem;
+}
 
 .block { padding: 2.75rem 0; border-top: 1px solid var(--line); }
 .block h2 {

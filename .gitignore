@@ -11,7 +11,6 @@ venv/
 .pytest_cache/
 .mypy_cache/
 .ruff_cache/
-*.spec
 resources/tools/**/uv.exe
 resources/tools/**/uv
 installer/output/

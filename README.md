@@ -7,7 +7,8 @@
 - サイト: https://uvdrop.github.io/uvdrop/
 - リポジトリ: https://github.com/uvdrop/uvdrop
 - リリースノート: [CHANGELOG.md](./CHANGELOG.md)
-- 現在のバージョン: **0.2.0**（GUI ヘッダーにも表示）
+- 現在のバージョン: **0.3.0**（GUI ヘッダーにも表示）
+- Windows 配布手順: [installer/PACKAGING.md](./installer/PACKAGING.md)
 
 ## できること
 
@@ -47,7 +48,15 @@ python -m uvdrop --cli path\to\app.zip --temp
 
 ## インストーラ
 
-素の PyInstaller exe 直配布は避け、Inno Setup の Setup.exe（Apps & Features 登録）を想定しています。手順は [installer/README.md](./installer/README.md)。
+素の PyInstaller exe 直配布は避け、**Inno Setup の Setup.exe**（Apps & Features 登録）を配布します。
+
+```powershell
+winget install --id JRSoftware.InnoSetup -e --accept-package-agreements --accept-source-agreements
+powershell -ExecutionPolicy Bypass -File .\installer\build.ps1
+```
+
+詳細・署名・Releases 手順: [installer/PACKAGING.md](./installer/PACKAGING.md)  
+成果物: `installer/output/uvdrop-<version>-setup.exe`
 
 ## ライセンス
 

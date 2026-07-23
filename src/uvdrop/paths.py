@@ -91,6 +91,7 @@ def project_root() -> Path:
 def bundled_uv() -> Path | None:
     root = project_root()
     candidates = [
+        root / "tools" / "uv.exe",  # installed (Inno) layout
         root / "resources" / "tools" / "windows-x64" / "uv.exe",
         root / "resources" / "tools" / "uv.exe",
         root / "uv.exe",
@@ -100,6 +101,8 @@ def bundled_uv() -> Path | None:
         if meipass:
             candidates.insert(0, Path(meipass) / "uv.exe")
             candidates.insert(0, Path(meipass) / "tools" / "uv.exe")
+        # onedir: exe sits next to _internal/; tools/ is sibling of exe
+        candidates.insert(0, root / "tools" / "uv.exe")
     for p in candidates:
         if p.is_file():
             return p
