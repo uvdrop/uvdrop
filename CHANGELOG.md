@@ -9,9 +9,24 @@ This project follows [Semantic Versioning](https://semver.org/).
 
 ### Planned
 
-- CI that builds Setup.exe on tagged releases
+- CI that builds Setup.exe / MSIX on tagged releases
 - Optional GuardDog deep scan
 - Richer xlsx column mapping (Python versions sheet)
+- Partner Center 提出用アイコン差し替え・Publisher CN 固定
+
+## [0.3.1] — 2026-07-23
+
+### Added
+
+- Three-track distribution guide: `docs/DISTRIBUTION.md` (Python / Inno / MSIX)
+- `THIRD_PARTY_NOTICES.md` + vendored `third_party/uv` license texts
+- MSIX scaffold: `installer/msix/` (`AppxManifest.xml`, `build-msix.ps1`)
+- GUI「ライセンス」ボタン（NOTICE / LICENSE を開く）
+- Packaging copies LICENSE + `third_party/` into binary payload
+
+### Changed
+
+- Version bump to 0.3.1
 
 ## [0.3.0] — 2026-07-23
 
@@ -54,7 +69,8 @@ This project follows [Semantic Versioning](https://semver.org/).
 - Local JSON policies for package allowlist and Python versions
 - MIT license, example policies, basic tests
 
-[Unreleased]: https://github.com/uvdrop/uvdrop/compare/v0.3.0...HEAD
-[0.3.0]: https://github.com/uvdrop/uvdrop/releases/tag/v0.3.0
+[Unreleased]: https://github.com/uvdrop/uvdrop/compare/v0.3.1...HEAD
+[0.3.1]: https://github.com/uvdrop/uvdrop/releases/tag/v0.3.1
+[0.3.0]: https://github.com/uvdrop/uvdrop/compare/v0.2.0...v0.3.0
 [0.2.0]: https://github.com/uvdrop/uvdrop/compare/v0.1.0...v0.2.0
 [0.1.0]: https://github.com/uvdrop/uvdrop/releases/tag/v0.1.0

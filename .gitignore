@@ -14,5 +14,7 @@ venv/
 resources/tools/**/uv.exe
 resources/tools/**/uv
 installer/output/
+installer/msix/output/
+installer/msix/stage/
 .DS_Store
 Thumbs.db

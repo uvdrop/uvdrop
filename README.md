@@ -7,8 +7,10 @@
 - サイト: https://uvdrop.github.io/uvdrop/
 - リポジトリ: https://github.com/uvdrop/uvdrop
 - リリースノート: [CHANGELOG.md](./CHANGELOG.md)
-- 現在のバージョン: **0.3.0**（GUI ヘッダーにも表示）
-- Windows 配布手順: [installer/PACKAGING.md](./installer/PACKAGING.md)
+- 現在のバージョン: **0.3.1**（GUI ヘッダーにも表示）
+- 配布3本柱: [docs/DISTRIBUTION.md](./docs/DISTRIBUTION.md)（Python / Inno / MSIX）
+- Windows Inno 手順: [installer/PACKAGING.md](./installer/PACKAGING.md)
+- 第三者ライセンス: [THIRD_PARTY_NOTICES.md](./THIRD_PARTY_NOTICES.md)
 
 ## できること
 
@@ -48,15 +50,22 @@ python -m uvdrop --cli path\to\app.zip --temp
 
 ## インストーラ
 
-素の PyInstaller exe 直配布は避け、**Inno Setup の Setup.exe**（Apps & Features 登録）を配布します。
+配布は **Python / Inno Setup.exe / MSIX(Store)** の3本です（コード共通）。概要は [docs/DISTRIBUTION.md](./docs/DISTRIBUTION.md)。
 
 ```powershell
 winget install --id JRSoftware.InnoSetup -e --accept-package-agreements --accept-source-agreements
 powershell -ExecutionPolicy Bypass -File .\installer\build.ps1
 ```
 
-詳細・署名・Releases 手順: [installer/PACKAGING.md](./installer/PACKAGING.md)  
-成果物: `installer/output/uvdrop-<version>-setup.exe`
+MSIX:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File .\installer\build.ps1 -SkipInno
+powershell -ExecutionPolicy Bypass -File .\installer\msix\build-msix.ps1
+```
+
+詳細: [installer/PACKAGING.md](./installer/PACKAGING.md) / [installer/msix/README.md](./installer/msix/README.md)  
+成果物例: `installer/output/uvdrop-<version>-setup.exe`
 
 ## ライセンス
 

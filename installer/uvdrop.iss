@@ -5,7 +5,7 @@
 ; Goal: ship Setup.exe (Apps & Features) instead of a bare PyInstaller exe.
 
 #define MyAppName "uvdrop"
-#define MyAppVersion "0.3.0"
+#define MyAppVersion "0.3.1"
 #define MyAppPublisher "uvdrop"
 #define MyAppURL "https://uvdrop.github.io/uvdrop/"
 #define MyAppExeName "uvdrop.exe"

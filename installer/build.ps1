@@ -88,6 +88,20 @@ if (Test-Path $UvSrc) {
 
 Write-Host "Payload OK: dist\uvdrop\" -ForegroundColor Green
 
+# Compliance files into payload (Inno/MSIX both ship these)
+$PayloadRoot = Join-Path $dist "uvdrop"
+foreach ($f in @("LICENSE", "THIRD_PARTY_NOTICES.md", "README.md")) {
+  $src = Join-Path $Root $f
+  if (Test-Path $src) { Copy-Item $src $PayloadRoot -Force }
+}
+$tpSrc = Join-Path $Root "third_party"
+$tpDst = Join-Path $PayloadRoot "third_party"
+if (Test-Path $tpSrc) {
+  if (Test-Path $tpDst) { Remove-Item $tpDst -Recurse -Force }
+  Copy-Item $tpSrc $tpDst -Recurse -Force
+}
+Write-Host "Bundled LICENSE + third_party into payload"
+
 if ($SkipInno) {
   Write-Host "SkipInno set — done."
   exit 0

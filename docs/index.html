@@ -33,8 +33,8 @@
         <a class="btn primary" href="https://github.com/uvdrop/uvdrop">リポジトリを見る</a>
         <a class="btn ghost" href="https://github.com/uvdrop/uvdrop/blob/main/CHANGELOG.md">CHANGELOG</a>
       </div>
-      <p class="ver" id="site-version">current: v0.3.0</p>
-      <p class="hero-dl"><a href="https://github.com/uvdrop/uvdrop/releases">GitHub Releases で Setup.exe を入手</a></p>
+      <p class="ver" id="site-version">current: v0.3.1</p>
+      <p class="hero-dl"><a href="https://github.com/uvdrop/uvdrop/releases">GitHub Releases で Setup.exe を入手</a> · <a href="https://github.com/uvdrop/uvdrop/blob/main/docs/DISTRIBUTION.md">配布3本柱</a></p>
     </section>
 
     <section id="features" class="block">
@@ -120,8 +120,8 @@ python -m uvdrop --version</code></pre>
         <li>xlsx URL から同期したキャッシュ（設定有効時）</li>
         <li>任意で OSV 脅威チェック</li>
       </ol>
-      <h3>Setup.exe の作り方</h3>
-      <p>Inno Setup 未経験向けの手順はリポジトリの <a href="https://github.com/uvdrop/uvdrop/blob/main/installer/PACKAGING.md">installer/PACKAGING.md</a> にまとめています。<code>build.ps1</code> 一発で PyInstaller → Setup.exe まで行けます。</p>
+      <h3>Setup.exe / MSIX の作り方</h3>
+      <p>コードは共通で、包み方だけが違います。概要は <a href="https://github.com/uvdrop/uvdrop/blob/main/docs/DISTRIBUTION.md">docs/DISTRIBUTION.md</a>。Inno 手順は <a href="https://github.com/uvdrop/uvdrop/blob/main/installer/PACKAGING.md">PACKAGING.md</a>、ライセンスは <a href="https://github.com/uvdrop/uvdrop/blob/main/THIRD_PARTY_NOTICES.md">THIRD_PARTY_NOTICES.md</a>。</p>
     </section>
 
     <section id="roadmap" class="block">
@@ -130,13 +130,20 @@ python -m uvdrop --version</code></pre>
         <li><span class="done">done</span> オフライン起動核・Tk GUI・JSON ポリシー</li>
         <li><span class="done">done</span> 一時実行の実削除・OSV / xlsx URL</li>
         <li><span class="done">done</span> Inno Setup 手順書・build.ps1（Setup.exe パイプライン）</li>
-        <li><span class="next">next</span> 署名付き Setup.exe を GitHub Releases に添付</li>
-        <li><span class="later">later</span> GuardDog 詳細スキャン、xlsx の Python 版シート、CI 自動ビルド</li>
+        <li><span class="done">done</span> 配布3本柱ドキュメント + 第三者ライセンス + MSIX 骨格</li>
+        <li><span class="next">next</span> 署名付き Setup.exe / Store 提出用 MSIX の定常リリース</li>
+        <li><span class="later">later</span> GuardDog、xlsx Python 版シート、CI 自動ビルド</li>
       </ul>
     </section>
 
     <section id="changelog" class="block">
       <h2>リリースノート</h2>
+      <article class="release">
+        <h3>v0.3.1 <time datetime="2026-07-23">2026-07-23</time></h3>
+        <ul>
+          <li>Python / Inno / MSIX の兼用説明、THIRD_PARTY_NOTICES、MSIX 骨格</li>
+        </ul>
+      </article>
       <article class="release">
         <h3>v0.3.0 <time datetime="2026-07-23">2026-07-23</time></h3>
         <ul>

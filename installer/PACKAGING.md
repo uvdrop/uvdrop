@@ -2,6 +2,9 @@
 
 この文書は **Inno Setup を初めて使う人**向けに、uvdrop の Setup.exe を作って GitHub Releases に載せるまでの手順です。
 
+配布全体（Python / Inno / MSIX）の関係は先に [docs/DISTRIBUTION.md](../docs/DISTRIBUTION.md) を読むと分かりやすいです。  
+第三者ライセンスは [THIRD_PARTY_NOTICES.md](../THIRD_PARTY_NOTICES.md)。
+
 想定成果物:
 
 ```text

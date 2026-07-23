@@ -49,6 +49,7 @@ class UvdropApp(tk.Tk):
             side=tk.LEFT, padx=(10, 0)
         )
         ttk.Button(header, text="設定…", command=self._open_settings).pack(side=tk.RIGHT)
+        ttk.Button(header, text="ライセンス", command=self._open_licenses).pack(side=tk.RIGHT, padx=(0, 8))
 
         actions = ttk.Frame(root)
         actions.pack(fill=tk.X, pady=(12, 8))
@@ -254,6 +255,29 @@ class UvdropApp(tk.Tk):
         cleanup_app(key, remove_registry=True)
         self._refresh_list()
         self._log(f"deleted app data: {key}")
+
+    def _open_licenses(self) -> None:
+        from uvdrop.paths import project_root
+        import os
+        import subprocess
+
+        candidates = [
+            project_root() / "THIRD_PARTY_NOTICES.md",
+            project_root() / "LICENSE",
+            project_root() / "third_party",
+        ]
+        for p in candidates:
+            if p.exists():
+                try:
+                    os.startfile(str(p))  # type: ignore[attr-defined]
+                except Exception:
+                    subprocess.Popen(["notepad.exe", str(p)])
+                self._log(f"opened: {p}")
+                return
+        messagebox.showinfo(
+            "uvdrop",
+            "THIRD_PARTY_NOTICES.md が見つかりません。\nリポジトリまたはインストール先を確認してください。",
+        )
 
     def _open_settings(self) -> None:
         s = load_settings()
