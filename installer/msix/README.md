@@ -25,16 +25,13 @@ powershell -ExecutionPolicy Bypass -File .\installer\msix\build-msix.ps1 -SignLo
 
 成果物: `installer/msix/output/uvdrop-<ver>.msix`
 
-## Partner Center の流れ（概要）
+## Partner Center
 
-1. https://storedeveloper.microsoft.com で個人アカウント（無料フロー）  
-2. アプリ名を予約  
-3. パッケージにこの `.msix` をアップロード  
-4. ストア掲載情報・年齢レーティング・審査  
+Identity values for this app are in [IDENTITY.md](./IDENTITY.md) and `AppxManifest.xml`.
 
-詳細コンセプトは [docs/DISTRIBUTION.md](../../docs/DISTRIBUTION.md)。
+After packaging, in the app’s submission:
 
-## マニフェストメモ
-
-- `runFullTrust` … `uv.exe` 子プロセス・AppData・ネットのため  
-- Publisher は Partner Center の発行元に合わせて後で差し替え（今は開発用プレースホルダ）
+1. **Packages** → upload `installer/msix/output/uvdrop-<ver>.msix`（提出用は未署名で可）
+2. Store listing（説明・スクショ）
+3. Age ratings / properties
+4. **Submit for certification**

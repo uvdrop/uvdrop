@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-  Development / packaging template.
-  Before Store submission, replace Identity Publisher with your Partner Center publisher CN
-  (Partner Center → Account settings → Package identity).
+  Package identity from Partner Center (uvdrop / Store ID 9PH385P01SK4).
+  Version is overwritten by installer/msix/build-msix.ps1 from src/uvdrop/version.py.
 -->
 <Package
   xmlns="http://schemas.microsoft.com/appx/manifest/foundation/windows10"
@@ -12,13 +11,13 @@
   IgnorableNamespaces="uap rescap desktop">
 
   <Identity
-    Name="uvdrop.uvdrop"
-    Publisher="CN=uvdrop"
+    Name="kushi94.uvdrop"
+    Publisher="CN=E3BB0538-56DE-400B-9683-8702B7A31930"
     Version="0.3.1.0" />
 
   <Properties>
     <DisplayName>uvdrop</DisplayName>
-    <PublisherDisplayName>uvdrop</PublisherDisplayName>
+    <PublisherDisplayName>kushi94</PublisherDisplayName>
     <Description>Practical offline uv launcher for Python apps</Description>
     <Logo>Assets\StoreLogo.png</Logo>
   </Properties>
