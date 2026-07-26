@@ -1,0 +1,11 @@
+[project]
+name = "uvdrop-sample-tflite-runtime-hint"
+version = "0.0.1"
+description = "Prefer ai-edge-litert where tflite-runtime is unavailable"
+requires-python = ">=3.11"
+dependencies = [
+    "ai-edge-litert",
+]
+
+[tool.uv]
+package = false

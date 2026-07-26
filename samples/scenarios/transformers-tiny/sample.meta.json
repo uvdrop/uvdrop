@@ -1,0 +1,9 @@
+{
+  "id": "transformers-tiny",
+  "tier": "heavy",
+  "name": "Transformers",
+  "summary": "import transformers (no model download)",
+  "platforms": [
+    "any"
+  ]
+}

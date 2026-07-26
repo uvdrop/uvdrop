@@ -6,5 +6,16 @@
     "3.12",
     "3.13"
   ],
-  "notes": "Copy to %LOCALAPPDATA%\\uvdrop\\policies\\python-versions.json. mode: warn | block"
+  "eol": {
+    "3.8": "2024-10-07",
+    "3.9": "2025-10-31",
+    "3.10": "2026-10-31",
+    "3.11": "2027-10-31",
+    "3.12": "2028-10-31",
+    "3.13": "2029-10-31",
+    "3.14": "2030-10-31"
+  },
+  "eol_warn_days": 365,
+  "eol_mode": "warn",
+  "notes": "Copy to %LOCALAPPDATA%\\uvdrop\\policies\\python-versions.json. mode/eol_mode: warn | block. eol_warn_days: warn when support ends within N days."
 }

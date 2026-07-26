@@ -1,12 +1,12 @@
 {
-  "version": 1,
+  "version": 2,
   "mode": "warn",
   "packages": [
-    "requests",
-    "httpx",
-    "pydantic",
-    "rich",
-    "typer"
+    {"name": "requests", "version": "*"},
+    {"name": "httpx", "version": "0.*"},
+    {"name": "pydantic", "version": ">=2"},
+    {"name": "rich", "version": "*"},
+    {"name": "typer", "version": "*"}
   ],
-  "notes": "Copy to %LOCALAPPDATA%\\uvdrop\\policies\\allowlist.json or point Settings at this file. mode: warn | block"
+  "notes": "これは見本です（自動では適用されません）。使うときは %LOCALAPPDATA%\\uvdrop\\policies\\allowlist.json にコピーしてください。version: * / 1.* / >=1.0,<2 など。設定UIの表・Excel/CSV とも和集合でマージされます。"
 }

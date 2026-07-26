@@ -1,0 +1,12 @@
+[project]
+name = "uvdrop-sample-unv-df4-mdf-hint"
+version = "0.0.1"
+description = "asammdf for MDF; UNV/DF4 often need vendor SDKs — import smoke only"
+requires-python = ">=3.11"
+dependencies = [
+    "asammdf>=7.4",
+    "numpy>=1.26",
+]
+
+[tool.uv]
+package = false

@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<html lang="ja">
+<html lang="en">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>uvdrop — 実務向けオフライン uv ランチャー</title>
-  <meta name="description" content="フォルダや ZIP を渡すと、uv で専用 .env を用意して Python アプリを起動するオフライン向けランチャー。" />
+  <title>uvdrop — Offline-first uv launcher</title>
+  <meta name="description" content="Pass a folder or ZIP, review packages that come along before running, then start your Python app with uv — offline-friendly." />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
@@ -14,83 +14,98 @@
   <div class="bg"></div>
   <header class="top">
     <a class="brand" href="./">uvdrop</a>
-    <nav>
-      <a href="#features">機能</a>
-      <a href="#usage">使い方</a>
-      <a href="#ops">運営</a>
-      <a href="#roadmap">ロードマップ</a>
-      <a href="#changelog">リリース</a>
-      <a class="gh" href="https://github.com/uvdrop/uvdrop">GitHub</a>
-    </nav>
+    <div class="top-right">
+      <nav>
+        <a href="#features" data-i18n="nav.features">Features</a>
+        <a href="#usage" data-i18n="nav.usage">Usage</a>
+        <a href="#ops" data-i18n="nav.ops">Ops</a>
+        <a href="#roadmap" data-i18n="nav.roadmap">Roadmap</a>
+        <a href="#changelog" data-i18n="nav.changelog">Releases</a>
+        <a class="gh" href="https://github.com/uvdrop/uvdrop" data-i18n="nav.github">GitHub</a>
+      </nav>
+      <div class="lang-switch" role="group" aria-label="Language">
+        <button type="button" data-lang="ja" aria-pressed="false">日本語</button>
+        <button type="button" data-lang="en" aria-pressed="false">English</button>
+        <button type="button" data-lang="zh" aria-pressed="false">中文</button>
+      </div>
+    </div>
   </header>
 
   <main>
     <section class="hero">
-      <p class="eyebrow">Offline-first · Windows · MIT</p>
+      <p class="eyebrow" data-i18n="hero.eyebrow">Offline-first · Windows · MIT</p>
       <h1 class="logo">uvdrop</h1>
-      <p class="tag">フォルダを渡して、すぐ動かす。<br />実務向けのオフライン uv ランチャー。</p>
+      <p class="tag" data-i18n-html="hero.tag">Drop a folder. Run it.<br />An offline uv launcher with review before running.</p>
       <div class="cta">
-        <a class="btn primary" href="https://github.com/uvdrop/uvdrop">リポジトリを見る</a>
-        <a class="btn ghost" href="https://github.com/uvdrop/uvdrop/blob/main/CHANGELOG.md">CHANGELOG</a>
+        <a class="btn primary" href="https://github.com/uvdrop/uvdrop" data-i18n="hero.cta.repo">View repository</a>
+        <a class="btn ghost" href="https://github.com/uvdrop/uvdrop/blob/main/CHANGELOG.md" data-i18n="hero.cta.changelog">CHANGELOG</a>
       </div>
-      <p class="ver" id="site-version">current: v0.3.1</p>
-      <p class="hero-dl"><a href="https://github.com/uvdrop/uvdrop/releases">GitHub Releases で Setup.exe を入手</a> · <a href="https://github.com/uvdrop/uvdrop/blob/main/docs/DISTRIBUTION.md">配布3本柱</a></p>
+      <p class="ver" id="site-version" data-i18n="hero.version">current: v0.9.1</p>
+      <p class="hero-dl" data-i18n-html="hero.dl"><a href="https://github.com/uvdrop/uvdrop/releases">Get Setup.exe from GitHub Releases</a> · <a href="https://github.com/uvdrop/uvdrop/blob/main/docs/DISTRIBUTION.md">Three distribution paths</a></p>
     </section>
 
     <section id="features" class="block">
-      <h2>機能</h2>
-      <p class="lede">ポータルや Git 連携なし。ローカルの Python アプリを安全に起動することに絞っています。</p>
+      <h2 data-i18n="features.title">Features</h2>
+      <p class="lede" data-i18n="features.lede">No portal, no Git sync. Focused on starting local Python apps with a clear look before anything is installed.</p>
       <ul class="grid">
         <li>
-          <h3>Drop &amp; Run</h3>
-          <p>決まった階層の <code>pyproject.toml</code> があるフォルダ、または ZIP を選ぶと <code>uv sync</code> → <code>uv run</code>。</p>
+          <h3 data-i18n-html="features.drop.title">Drop &amp; Run</h3>
+          <p data-i18n-html="features.drop.body">Pick a folder or ZIP that has a <code>pyproject.toml</code> in the expected place.</p>
         </li>
         <li>
-          <h3>専用 .env</h3>
-          <p>アプリ本体の外（AppData）に .env を保持し、起動前にワークスペースへコピーします。</p>
+          <h3 data-i18n="features.env.title">Dedicated settings file</h3>
+          <p data-i18n-html="features.env.body">Keeps a <code>.env</code> outside the app and copies it into the workspace just before launch.</p>
         </li>
         <li>
-          <h3>保持 / 一時実行</h3>
-          <p>保持は再起動とショートカット向き。一時実行はプロセス終了後にワークスペース・venv・.env を削除します。</p>
+          <h3 data-i18n="features.review.title">Review before running</h3>
+          <p data-i18n-html="features.review.body">Before creating a virtual environment, review packages that come along (the full resolved set).</p>
         </li>
         <li>
-          <h3>ローカルポリシー</h3>
-          <p>許可パッケージ・許可 Python バージョンを JSON でオフライン管理。xlsx URL 配信も可。</p>
+          <h3 data-i18n="features.policy.title">Allow list / block list</h3>
+          <p data-i18n="features.policy.body">Manage package names and version rules in a grid. Import from Excel / CSV offline.</p>
         </li>
         <li>
-          <h3>OSV オプション</h3>
-          <p>設定で有効化すると OSV.dev の <code>MAL-*</code> を照会（warn / block）。</p>
+          <h3 data-i18n="features.console.title">Console window (optional)</h3>
+          <p data-i18n-html="features.console.body">The black console window is <strong>hidden by default</strong>.</p>
         </li>
         <li>
-          <h3>デスクトップショートカット</h3>
-          <p>保持したアプリを Windows デスクトップから再起動できます。</p>
+          <h3 data-i18n="features.usage.title">Usage history</h3>
+          <p data-i18n="features.usage.body">Last launch, launch counts, and day / week / month charts.</p>
+        </li>
+        <li>
+          <h3 data-i18n="features.lang.title">Display language</h3>
+          <p data-i18n="features.lang.body">Switch Japanese / English / Chinese inside the app.</p>
+        </li>
+        <li>
+          <h3 data-i18n="features.shortcut.title">Desktop shortcuts</h3>
+          <p data-i18n="features.shortcut.body">Relaunch kept apps from the Windows desktop.</p>
         </li>
       </ul>
     </section>
 
     <section id="usage" class="block">
-      <h2>使い方</h2>
+      <h2 data-i18n="usage.title">Usage</h2>
       <ol class="steps">
         <li>
-          <strong>開発実行</strong>
+          <strong data-i18n="usage.dev.title">Run from source</strong>
           <pre><code>git clone https://github.com/uvdrop/uvdrop.git
 cd uvdrop
 python -m uvdrop</code></pre>
         </li>
         <li>
-          <strong>uv の配置</strong>
-          <p>PATH の <code>uv</code>、または <code>resources/tools/windows-x64/uv.exe</code> に公式バイナリを置きます。</p>
+          <strong data-i18n="usage.uv.title">Where uv lives</strong>
+          <p data-i18n-html="usage.uv.body">Use <code>uv</code> on PATH, or place the official binary at <code>resources/tools/windows-x64/uv.exe</code>.</p>
         </li>
         <li>
-          <strong>アプリを渡す</strong>
-          <p>GUI でフォルダ / ZIP を選択。「起動後も保持する」をオフにすると一時実行になります。</p>
+          <strong data-i18n="usage.app.title">Hand over an app</strong>
+          <p data-i18n-html="usage.app.body">In the GUI, pick a folder or ZIP. After review before running, it stays in the list until you delete it.</p>
         </li>
         <li>
-          <strong>ポリシー</strong>
-          <p>初回起動で <code>%LOCALAPPDATA%\uvdrop\policies\</code> に例がコピーされます。編集するか、設定から xlsx URL / OSV を有効化。</p>
+          <strong data-i18n="usage.policy.title">Allow list and related settings</strong>
+          <p data-i18n-html="usage.policy.body">On first launch, samples are copied to <code>%LOCALAPPDATA%\uvdrop\policies\</code>.</p>
         </li>
         <li>
-          <strong>CLI</strong>
+          <strong data-i18n="usage.cli.title">Command line</strong>
           <pre><code>python -m uvdrop --cli path\to\app
 python -m uvdrop --cli path\to\app.zip --temp
 python -m uvdrop --version</code></pre>
@@ -99,78 +114,90 @@ python -m uvdrop --version</code></pre>
     </section>
 
     <section id="ops" class="block">
-      <h2>運営・データ配置</h2>
-      <p class="lede">インストールや監査で見る場所はここです。</p>
+      <h2 data-i18n="ops.title">Ops &amp; where data lives</h2>
+      <p class="lede" data-i18n="ops.lede">These are the paths to check for install or audit.</p>
       <table>
         <thead>
-          <tr><th>パス</th><th>内容</th></tr>
+          <tr>
+            <th data-i18n="ops.th.path">Path</th>
+            <th data-i18n="ops.th.content">What it holds</th>
+          </tr>
         </thead>
         <tbody>
-          <tr><td><code>%LOCALAPPDATA%\uvdrop\apps\</code></td><td>展開・コピーしたワークスペース</td></tr>
-          <tr><td><code>%LOCALAPPDATA%\uvdrop\envs\</code></td><td>アプリごとの venv（uv）</td></tr>
-          <tr><td><code>%LOCALAPPDATA%\uvdrop\dotenv\</code></td><td>専用 .env の正本</td></tr>
-          <tr><td><code>%LOCALAPPDATA%\uvdrop\policies\</code></td><td>allowlist / python-versions / xlsx キャッシュ</td></tr>
-          <tr><td><code>%LOCALAPPDATA%\uvdrop\settings.json</code></td><td>OSV・xlsx URL など</td></tr>
-          <tr><td><code>%LOCALAPPDATA%\uvdrop\apps.json</code></td><td>保持アプリのレジストリ</td></tr>
+          <tr><td><code>%LOCALAPPDATA%\uvdrop\apps\</code></td><td data-i18n="ops.apps">Copied / extracted workspaces</td></tr>
+          <tr><td><code>%LOCALAPPDATA%\uvdrop\envs\</code></td><td data-i18n="ops.envs">Per-app virtual environments (uv)</td></tr>
+          <tr><td><code>%LOCALAPPDATA%\uvdrop\dotenv\</code></td><td data-i18n-html="ops.dotenv">Canonical <code>.env</code> files</td></tr>
+          <tr><td><code>%LOCALAPPDATA%\uvdrop\policies\</code></td><td data-i18n="ops.policies">Allow list / block list / Python versions / Excel cache</td></tr>
+          <tr><td><code>%LOCALAPPDATA%\uvdrop\settings.json</code></td><td data-i18n="ops.settings">Allow &amp; block lists, Excel / CSV, proxy, and other settings</td></tr>
+          <tr><td><code>%LOCALAPPDATA%\uvdrop\apps.json</code></td><td data-i18n="ops.appsjson">Registry of kept apps</td></tr>
+          <tr><td><code>%LOCALAPPDATA%\uvdrop\usage.json</code></td><td data-i18n="ops.usage">Launch history (by day)</td></tr>
         </tbody>
       </table>
-      <h3>ポリシーの優先</h3>
+      <h3 data-i18n="ops.priority.title">Policy order</h3>
       <ol>
-        <li>ローカル <code>allowlist.json</code></li>
-        <li>xlsx URL から同期したキャッシュ（設定有効時）</li>
-        <li>任意で OSV 脅威チェック</li>
+        <li data-i18n="ops.priority.1">Local allow / block lists, or direct input in settings</li>
+        <li data-i18n="ops.priority.2">Cache imported from Excel / CSV (when enabled)</li>
+        <li data-i18n="ops.priority.3">Allowed Python version check</li>
       </ol>
-      <h3>Setup.exe / MSIX の作り方</h3>
-      <p>コードは共通で、包み方だけが違います。概要は <a href="https://github.com/uvdrop/uvdrop/blob/main/docs/DISTRIBUTION.md">docs/DISTRIBUTION.md</a>。Inno は <a href="https://github.com/uvdrop/uvdrop/blob/main/installer/PACKAGING.md">PACKAGING.md</a>、Store 提出は <a href="https://github.com/uvdrop/uvdrop/blob/main/docs/STORE_PARTNER_CENTER.md">STORE_PARTNER_CENTER.md</a>、ライセンスは <a href="https://github.com/uvdrop/uvdrop/blob/main/THIRD_PARTY_NOTICES.md">THIRD_PARTY_NOTICES.md</a>。</p>
+      <h3 data-i18n="ops.build.title">Building Setup.exe / MSIX</h3>
+      <p data-i18n-html="ops.build.body">One codebase; only packaging differs. See docs/DISTRIBUTION.md.</p>
     </section>
 
     <section id="roadmap" class="block">
-      <h2>ロードマップ</h2>
+      <h2 data-i18n="roadmap.title">Roadmap</h2>
       <ul class="roadmap">
-        <li><span class="done">done</span> オフライン起動核・Tk GUI・JSON ポリシー</li>
-        <li><span class="done">done</span> 一時実行の実削除・OSV / xlsx URL</li>
-        <li><span class="done">done</span> Inno Setup 手順書・build.ps1（Setup.exe パイプライン）</li>
-        <li><span class="done">done</span> 配布3本柱ドキュメント + 第三者ライセンス + MSIX 骨格</li>
-        <li><span class="next">next</span> 署名付き Setup.exe / Store 提出用 MSIX の定常リリース</li>
-        <li><span class="later">later</span> GuardDog、xlsx Python 版シート、CI 自動ビルド</li>
+        <li><span class="done">done</span> <span data-i18n="roadmap.1">Offline launch core, GUI, local allow rules</span></li>
+        <li><span class="done">done</span> <span data-i18n="roadmap.2">Review before running · allow / block lists · packages that come along</span></li>
+        <li><span class="done">done</span> <span data-i18n="roadmap.3">Usage history · optional console · language switcher</span></li>
+        <li><span class="done">done</span> <span data-i18n="roadmap.4">Inno Setup docs · Setup.exe pipeline</span></li>
+        <li><span class="done">done</span> <span data-i18n="roadmap.5">Three distribution paths · third-party notices · MSIX skeleton</span></li>
+        <li><span class="next">next</span> <span data-i18n="roadmap.6">Steady signed Setup.exe / Store MSIX releases</span></li>
+        <li><span class="later">later</span> <span data-i18n="roadmap.7">Excel Python-version sheet · CI auto-build</span></li>
       </ul>
     </section>
 
     <section id="changelog" class="block">
-      <h2>リリースノート</h2>
+      <h2 data-i18n="changelog.title">Release notes</h2>
       <article class="release">
-        <h3>v0.3.1 <time datetime="2026-07-23">2026-07-23</time></h3>
+        <h3><span data-i18n="changelog.091.title">v0.9.1</span> <time datetime="2026-07-26">2026-07-26</time></h3>
         <ul>
-          <li>Python / Inno / MSIX の兼用説明、THIRD_PARTY_NOTICES、MSIX 骨格</li>
+          <li data-i18n="changelog.091.1">Dependencies resolved with uv lock --no-build — no build code runs before you confirm</li>
+          <li data-i18n="changelog.091.2">Block mode refuses to launch when the full dependency tree cannot be verified</li>
+          <li data-i18n="changelog.091.3">Full Japanese / English / Chinese coverage for every screen, plus SECURITY and uninstall docs</li>
         </ul>
       </article>
       <article class="release">
-        <h3>v0.3.0 <time datetime="2026-07-23">2026-07-23</time></h3>
+        <h3><span data-i18n="changelog.090.title">v0.9.0</span> <time datetime="2026-07-26">2026-07-26</time></h3>
         <ul>
-          <li>Inno Setup 入門手順書と build / fetch-uv / sign スクリプト</li>
-          <li>Setup.exe パイプライン（PyInstaller onedir → ISCC）</li>
+          <li data-i18n="changelog.090.1">Review before running shows the full set of packages that come along</li>
+          <li data-i18n="changelog.090.2">Allow / block lists with version rules, console option, usage history, language switcher</li>
         </ul>
       </article>
       <article class="release">
-        <h3>v0.2.0 <time datetime="2026-07-22">2026-07-22</time></h3>
+        <h3><span data-i18n="changelog.080.title">v0.8.0</span> <time datetime="2026-07-26">2026-07-26</time></h3>
         <ul>
-          <li>一時実行の終了後クリーンアップ</li>
-          <li>OSV / xlsx URL オプション</li>
-          <li>GUI にバージョン表示、Pages サイト、Inno 骨格</li>
+          <li data-i18n="changelog.080.1">Usage charts, launch counts, version-rule guide and validation</li>
         </ul>
       </article>
       <article class="release">
-        <h3>v0.1.0 <time datetime="2026-07-22">2026-07-22</time></h3>
+        <h3><span data-i18n="changelog.070.title">v0.7.0</span> <time datetime="2026-07-26">2026-07-26</time></h3>
         <ul>
-          <li>初版: フォルダ/ZIP → .env → uv sync/run、保持、ショートカット、ローカル JSON ポリシー</li>
+          <li data-i18n="changelog.070.1">Spreadsheet-style allow / block lists with version rules · Excel / CSV import</li>
         </ul>
       </article>
-      <p><a href="https://github.com/uvdrop/uvdrop/blob/main/CHANGELOG.md">全文は CHANGELOG.md</a></p>
+      <article class="release">
+        <h3><span data-i18n="changelog.050.title">v0.5.0</span> <time datetime="2026-07-26">2026-07-26</time></h3>
+        <ul>
+          <li data-i18n="changelog.050.1">Review-before-running UI · simple requirements.txt conversion</li>
+        </ul>
+      </article>
+      <p><a href="https://github.com/uvdrop/uvdrop/blob/main/CHANGELOG.md" data-i18n="changelog.more">Full notes in CHANGELOG.md</a></p>
     </section>
   </main>
 
   <footer>
-    <p><strong>uvdrop</strong> · MIT License · <a href="https://github.com/uvdrop/uvdrop">github.com/uvdrop/uvdrop</a></p>
+    <p data-i18n-html="footer"><strong>uvdrop</strong> · MIT License · <a href="https://github.com/uvdrop/uvdrop">github.com/uvdrop/uvdrop</a></p>
   </footer>
+  <script src="i18n.js"></script>
 </body>
 </html>

@@ -1,0 +1,11 @@
+[project]
+name = "uvdrop-sample-pyqt5-import"
+version = "0.0.1"
+description = "Qt5 binding smoke (no window)"
+requires-python = ">=3.11"
+dependencies = [
+    "PyQt5>=5.15",
+]
+
+[tool.uv]
+package = false

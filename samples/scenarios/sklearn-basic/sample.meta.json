@@ -1,0 +1,9 @@
+{
+  "id": "sklearn-basic",
+  "tier": "light",
+  "name": "scikit-learn",
+  "summary": "fit a tiny model",
+  "platforms": [
+    "any"
+  ]
+}

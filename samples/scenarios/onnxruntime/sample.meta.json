@@ -1,0 +1,9 @@
+{
+  "id": "onnxruntime",
+  "tier": "medium",
+  "name": "ONNX Runtime",
+  "summary": "onnxruntime import",
+  "platforms": [
+    "any"
+  ]
+}

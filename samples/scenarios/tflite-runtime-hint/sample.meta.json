@@ -1,0 +1,9 @@
+{
+  "id": "tflite-runtime-hint",
+  "tier": "medium",
+  "name": "TFLite-ish (ai-edge-litert)",
+  "summary": "Prefer ai-edge-litert where tflite-runtime is unavailable",
+  "platforms": [
+    "any"
+  ]
+}

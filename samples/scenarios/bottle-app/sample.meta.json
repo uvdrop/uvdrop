@@ -1,0 +1,9 @@
+{
+  "id": "bottle-app",
+  "tier": "light",
+  "name": "Bottle",
+  "summary": "import bottle",
+  "platforms": [
+    "any"
+  ]
+}

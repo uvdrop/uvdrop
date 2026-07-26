@@ -1,0 +1,9 @@
+{
+  "id": "pyside6-import",
+  "tier": "medium",
+  "name": "PySide6 import",
+  "summary": "Qt binding smoke (no window)",
+  "platforms": [
+    "any"
+  ]
+}

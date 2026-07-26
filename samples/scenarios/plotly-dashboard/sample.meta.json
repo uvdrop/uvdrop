@@ -1,0 +1,9 @@
+{
+  "id": "plotly-dashboard",
+  "tier": "light",
+  "name": "Plotly chart",
+  "summary": "plotly figure build (no browser)",
+  "platforms": [
+    "any"
+  ]
+}

@@ -1,0 +1,9 @@
+{
+  "id": "csv-xlsx-matplotlib",
+  "tier": "light",
+  "name": "CSV/XLSX → matplotlib",
+  "summary": "pandas + openpyxl + matplotlib (Agg)",
+  "platforms": [
+    "any"
+  ]
+}

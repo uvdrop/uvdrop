@@ -1,0 +1,9 @@
+{
+  "id": "stdlib-hello",
+  "tier": "light",
+  "name": "Stdlib hello",
+  "summary": "no third-party deps (baseline timing)",
+  "platforms": [
+    "any"
+  ]
+}

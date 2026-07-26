@@ -1,6 +1,6 @@
 [project]
 name = "uvdrop"
-version = "0.3.1"
+version = "0.9.1"
 description = "Practical offline uv launcher for Python apps (folder/ZIP → .env → uv sync/run)"
 readme = "README.md"
 requires-python = ">=3.11"

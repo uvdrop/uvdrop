@@ -17,6 +17,9 @@ def main(argv: list[str] | None = None) -> int:
         result = relaunch_kept(key)
     except Exception as e:
         print(f"uvdrop: {e}", file=sys.stderr)
+        import traceback
+
+        traceback.print_exc()
         return 1
     print(f"launched {result.app_key} pid={result.pid}")
     for w in result.policy.warnings:

@@ -1,0 +1,9 @@
+{
+  "id": "diffusers-import",
+  "tier": "heavy",
+  "name": "Diffusers",
+  "summary": "import diffusers (no pipeline download)",
+  "platforms": [
+    "any"
+  ]
+}

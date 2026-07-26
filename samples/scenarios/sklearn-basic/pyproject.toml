@@ -1,0 +1,12 @@
+[project]
+name = "uvdrop-sample-sklearn-basic"
+version = "0.0.1"
+description = "fit a tiny model"
+requires-python = ">=3.11"
+dependencies = [
+    "scikit-learn>=1.4",
+    "numpy>=1.26",
+]
+
+[tool.uv]
+package = false

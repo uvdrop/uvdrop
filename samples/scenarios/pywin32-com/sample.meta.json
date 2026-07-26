@@ -1,0 +1,9 @@
+{
+  "id": "pywin32-com",
+  "tier": "light",
+  "name": "pywin32 COM",
+  "summary": "win32com import (Windows)",
+  "platforms": [
+    "win32"
+  ]
+}

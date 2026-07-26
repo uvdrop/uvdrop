@@ -1,0 +1,14 @@
+{
+  "version": 1,
+  "catalog": "Example HTTP catalog",
+  "base": "\\\\fileserver\\uvdrop-apps",
+  "apps": [
+    {
+      "id": "monthly-report",
+      "name": "Monthly report",
+      "summary": "Served via HTTPS catalog; app body still on the share (base + path).",
+      "path": "report-tool",
+      "command": "main.py"
+    }
+  ]
+}

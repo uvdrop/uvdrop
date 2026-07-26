@@ -1,0 +1,9 @@
+{
+  "id": "audio-librosa",
+  "tier": "medium",
+  "name": "Audio (librosa)",
+  "summary": "librosa import",
+  "platforms": [
+    "any"
+  ]
+}

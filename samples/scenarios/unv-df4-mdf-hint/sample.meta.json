@@ -1,0 +1,9 @@
+{
+  "id": "unv-df4-mdf-hint",
+  "tier": "medium",
+  "name": "Measurement file hint (ASAM)",
+  "summary": "asammdf for MDF; UNV/DF4 often need vendor SDKs — import smoke only",
+  "platforms": [
+    "any"
+  ]
+}

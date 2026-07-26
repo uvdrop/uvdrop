@@ -1,0 +1,9 @@
+{
+  "id": "faiss-cpu",
+  "tier": "medium",
+  "name": "FAISS CPU",
+  "summary": "tiny index add/search",
+  "platforms": [
+    "any"
+  ]
+}

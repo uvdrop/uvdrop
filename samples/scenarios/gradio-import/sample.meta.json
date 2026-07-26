@@ -1,0 +1,9 @@
+{
+  "id": "gradio-import",
+  "tier": "medium",
+  "name": "Gradio",
+  "summary": "import gradio (no server)",
+  "platforms": [
+    "any"
+  ]
+}

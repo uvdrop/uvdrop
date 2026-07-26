@@ -1,0 +1,9 @@
+{
+  "id": "camera-opencv",
+  "tier": "light",
+  "name": "Camera stack (OpenCV)",
+  "summary": "VideoCapture API available — does not open a device",
+  "platforms": [
+    "any"
+  ]
+}

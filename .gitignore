@@ -18,3 +18,9 @@ installer/msix/output/
 installer/msix/stage/
 .DS_Store
 Thumbs.db
+reports/bench/_appdata/
+reports/bench/bench-*.json
+reports/bench/bench-*.md
+reports/bench/bench-*.html
+!reports/bench/latest.html
+!reports/bench/latest.json

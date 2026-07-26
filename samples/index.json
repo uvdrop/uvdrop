@@ -1,0 +1,265 @@
+{
+  "samples": [
+    {
+      "id": "csv-xlsx-matplotlib",
+      "tier": "light",
+      "name": "CSV/XLSX → matplotlib",
+      "summary": "pandas + openpyxl + matplotlib (Agg)",
+      "platforms": [
+        "any"
+      ]
+    },
+    {
+      "id": "plotly-dashboard",
+      "tier": "light",
+      "name": "Plotly chart",
+      "summary": "plotly figure build (no browser)",
+      "platforms": [
+        "any"
+      ]
+    },
+    {
+      "id": "unv-df4-mdf-hint",
+      "tier": "medium",
+      "name": "Measurement file hint (ASAM)",
+      "summary": "asammdf for MDF; UNV/DF4 often need vendor SDKs — import smoke only",
+      "platforms": [
+        "any"
+      ]
+    },
+    {
+      "id": "pyside6-import",
+      "tier": "medium",
+      "name": "PySide6 import",
+      "summary": "Qt binding smoke (no window)",
+      "platforms": [
+        "any"
+      ]
+    },
+    {
+      "id": "pyqt5-import",
+      "tier": "medium",
+      "name": "PyQt5 import",
+      "summary": "Qt5 binding smoke (no window)",
+      "platforms": [
+        "any"
+      ]
+    },
+    {
+      "id": "sklearn-basic",
+      "tier": "light",
+      "name": "scikit-learn",
+      "summary": "fit a tiny model",
+      "platforms": [
+        "any"
+      ]
+    },
+    {
+      "id": "lightgbm-basic",
+      "tier": "medium",
+      "name": "LightGBM",
+      "summary": "tiny booster fit",
+      "platforms": [
+        "any"
+      ]
+    },
+    {
+      "id": "timeseries-statsmodels",
+      "tier": "medium",
+      "name": "Time series (statsmodels)",
+      "summary": "statsmodels import + tiny ARIMA-ready series",
+      "platforms": [
+        "any"
+      ]
+    },
+    {
+      "id": "torch-cpu",
+      "tier": "heavy",
+      "name": "PyTorch CPU",
+      "summary": "torch tensor op (CPU wheel)",
+      "platforms": [
+        "any"
+      ]
+    },
+    {
+      "id": "tensorflow-cpu",
+      "tier": "heavy",
+      "name": "TensorFlow",
+      "summary": "tf constant (large download)",
+      "platforms": [
+        "any"
+      ]
+    },
+    {
+      "id": "transformers-tiny",
+      "tier": "heavy",
+      "name": "Transformers",
+      "summary": "import transformers (no model download)",
+      "platforms": [
+        "any"
+      ]
+    },
+    {
+      "id": "diffusers-import",
+      "tier": "heavy",
+      "name": "Diffusers",
+      "summary": "import diffusers (no pipeline download)",
+      "platforms": [
+        "any"
+      ]
+    },
+    {
+      "id": "opencv-pillow",
+      "tier": "light",
+      "name": "OpenCV + Pillow",
+      "summary": "image array smoke",
+      "platforms": [
+        "any"
+      ]
+    },
+    {
+      "id": "onnxruntime",
+      "tier": "medium",
+      "name": "ONNX Runtime",
+      "summary": "onnxruntime import",
+      "platforms": [
+        "any"
+      ]
+    },
+    {
+      "id": "tflite-runtime-hint",
+      "tier": "medium",
+      "name": "TFLite-ish (ai-edge-litert)",
+      "summary": "Prefer ai-edge-litert where tflite-runtime is unavailable",
+      "platforms": [
+        "any"
+      ]
+    },
+    {
+      "id": "ultralytics-yolo",
+      "tier": "heavy",
+      "name": "Ultralytics YOLO",
+      "summary": "import ultralytics (no weights download)",
+      "platforms": [
+        "any"
+      ]
+    },
+    {
+      "id": "paddleocr-import",
+      "tier": "heavy",
+      "name": "PaddleOCR",
+      "summary": "import paddleocr (large)",
+      "platforms": [
+        "any"
+      ]
+    },
+    {
+      "id": "pywin32-com",
+      "tier": "light",
+      "name": "pywin32 COM",
+      "summary": "win32com import (Windows)",
+      "platforms": [
+        "win32"
+      ]
+    },
+    {
+      "id": "pyautogui-import",
+      "tier": "medium",
+      "name": "PyAutoGUI",
+      "summary": "import only (no input injection)",
+      "platforms": [
+        "any"
+      ]
+    },
+    {
+      "id": "audio-librosa",
+      "tier": "medium",
+      "name": "Audio (librosa)",
+      "summary": "librosa import",
+      "platforms": [
+        "any"
+      ]
+    },
+    {
+      "id": "camera-opencv",
+      "tier": "light",
+      "name": "Camera stack (OpenCV)",
+      "summary": "VideoCapture API available — does not open a device",
+      "platforms": [
+        "any"
+      ]
+    },
+    {
+      "id": "flask-app",
+      "tier": "light",
+      "name": "Flask",
+      "summary": "create Flask app object, no server",
+      "platforms": [
+        "any"
+      ]
+    },
+    {
+      "id": "fastapi-app",
+      "tier": "light",
+      "name": "FastAPI",
+      "summary": "create FastAPI app object, no server",
+      "platforms": [
+        "any"
+      ]
+    },
+    {
+      "id": "bottle-app",
+      "tier": "light",
+      "name": "Bottle",
+      "summary": "import bottle",
+      "platforms": [
+        "any"
+      ]
+    },
+    {
+      "id": "django-setup",
+      "tier": "medium",
+      "name": "Django",
+      "summary": "django.setup with minimal settings",
+      "platforms": [
+        "any"
+      ]
+    },
+    {
+      "id": "streamlit-import",
+      "tier": "medium",
+      "name": "Streamlit",
+      "summary": "import streamlit (no server)",
+      "platforms": [
+        "any"
+      ]
+    },
+    {
+      "id": "gradio-import",
+      "tier": "medium",
+      "name": "Gradio",
+      "summary": "import gradio (no server)",
+      "platforms": [
+        "any"
+      ]
+    },
+    {
+      "id": "faiss-cpu",
+      "tier": "medium",
+      "name": "FAISS CPU",
+      "summary": "tiny index add/search",
+      "platforms": [
+        "any"
+      ]
+    },
+    {
+      "id": "stdlib-hello",
+      "tier": "light",
+      "name": "Stdlib hello",
+      "summary": "no third-party deps (baseline timing)",
+      "platforms": [
+        "any"
+      ]
+    }
+  ]
+}

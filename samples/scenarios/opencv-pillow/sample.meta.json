@@ -1,0 +1,9 @@
+{
+  "id": "opencv-pillow",
+  "tier": "light",
+  "name": "OpenCV + Pillow",
+  "summary": "image array smoke",
+  "platforms": [
+    "any"
+  ]
+}

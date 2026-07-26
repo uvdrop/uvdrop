@@ -1,0 +1,11 @@
+[project]
+name = "uvdrop-sample-django-setup"
+version = "0.0.1"
+description = "django.setup with minimal settings"
+requires-python = ">=3.11"
+dependencies = [
+    "django>=5.0",
+]
+
+[tool.uv]
+package = false

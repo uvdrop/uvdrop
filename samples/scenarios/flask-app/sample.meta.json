@@ -1,0 +1,9 @@
+{
+  "id": "flask-app",
+  "tier": "light",
+  "name": "Flask",
+  "summary": "create Flask app object, no server",
+  "platforms": [
+    "any"
+  ]
+}

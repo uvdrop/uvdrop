@@ -48,7 +48,7 @@ powershell -ExecutionPolicy Bypass -File .\installer\build.ps1
 | **Inno Setup 6** | Setup.exe を作る本命 | 下記 |
 | uv.exe（公式） | ランチャー同梱 | `fetch-uv.ps1` が自動取得可 |
 | （任意）Windows SDK | `signtool` で署名 | Visual Studio / Build Tools |
-| （任意）コード署名証明書 | Authenticode | 社内 CA または購入 |
+| （任意）コード署名証明書 | Authenticode | プライベート CA または購入 |
 
 ### Inno Setup のインストール（初めての人向け）
 
@@ -135,7 +135,7 @@ powershell -ExecutionPolicy Bypass -File .\installer\build.ps1
 
 ## 4. 署名（あると本命）
 
-署名なしでも配布はできますが、SmartScreen / 社内 AV ではまだ警告が出ることがあります。
+署名なしでも配布はできますが、SmartScreen / AV ではまだ警告が出ることがあります。
 
 ```powershell
 # 証明書の Thumbprint を調べる
@@ -155,7 +155,7 @@ powershell -ExecutionPolicy Bypass -File .\installer\sign.ps1 `
 - コード署名証明書（`.pfx` をインポート済み、またはスマートカード）  
 - `signtool.exe`（Windows SDK）
 
-社内だけの配布なら、**社内 CA で発行したコード署名証明書**を利用者 PC に信頼させる運用でも十分です。
+限定した相手にだけ配るなら、**プライベート CA で発行したコード署名証明書**を利用者 PC に信頼させる運用でも十分です。
 
 ---
 
@@ -189,7 +189,7 @@ gh release create v0.3.0 .\installer\output\uvdrop-0.3.0-setup.exe `
 | `ISCC.exe not found` | Inno Setup 6 を入れる。パスは上文参照 |
 | PyInstaller で tkinter エラー | Python が Embeddable 版でないか。通常の python.org / Store 版を推奨 |
 | 起動後 `uv.exe not found` | `resources\tools\windows-x64\uv.exe` があるか。`fetch-uv.ps1` 再実行 |
-| AV が Setup を落とす | 署名、または社内ホワイトリスト。単体 exe 直配布は避ける |
+| AV が Setup を落とす | 署名、または AV 側の許可登録。単体 exe 直配布は避ける |
 | 版が古い | `src\uvdrop\version.py` を上げてから `build.ps1`（.iss は自動同期） |
 
 ---
@@ -202,6 +202,49 @@ gh release create v0.3.0 .\installer\output\uvdrop-0.3.0-setup.exe `
 4. `docs/index.html` の表示版を更新  
 5. `build.ps1`（.iss は自動同期）  
 6. タグ `vX.Y.Z` を push → Release に Setup.exe  
+
+---
+
+## 8. Smart App Control / 「署名がない」でブロックされるとき
+
+Windows 11 の **スマート アプリ コントロール (SAC)** や、厳しい環境のアプリケーション制御は、**未署名の exe を CreateProcess エラー（例: 4551）で止めます。**
+
+Inno で入れた構成だと、少なくとも次が対象になり得ます。
+
+| ファイル | なぜブロックされうるか |
+|----------|------------------------|
+| `uvdrop.exe` | PyInstaller 製で、配布者が Authenticode 署名していない |
+| `tools\uv.exe` | 公式ビルドでも環境によっては「信頼不足」と判定されることがある |
+
+### 開発者本人が試すとき（いちばん手軽）
+
+インストーラ版を使わず、ソースから:
+
+```powershell
+cd path\to\uvdrop
+python -m uvdrop
+```
+
+（通常の python.org 製 Python は署名付きのため、SAC 下でも動きやすいです。）
+
+### 利用者向けの本命ルート
+
+| 配布 | SAC / 信頼 |
+|------|------------|
+| **Microsoft Store + MSIX** | Store がパッケージを再署名 → **証明書を自分で買わなくても**一般利用者向けに最も通りやすい |
+| **GitHub Releases + Setup.exe** | **Authenticode 署名が実質必須**（`uvdrop.exe` と、同梱するなら `uv.exe` も署名推奨） |
+
+署名手順は上文「4. 署名」および `installer/sign.ps1`。  
+証明書が無い段階では、**Store 提出を先に進める**か、**テストは `python -m uvdrop`** が現実的です。
+
+### SAC をオフにする？
+
+自分の検証 PC だけ、一時的に無効化して試す人はいます。ただし:
+
+- 組織ポリシーや家庭の「推奨構成」では推奨しない  
+- SAC は一度 Enforcement になると、**簡単には元に戻せない**場合がある  
+
+利用者向け案内に「SAC を切ってください」と書くのは避け、**Store 版または署名付き Setup** を案内してください。
 
 ---
 

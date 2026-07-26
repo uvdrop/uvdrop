@@ -1,0 +1,9 @@
+{
+  "id": "streamlit-import",
+  "tier": "medium",
+  "name": "Streamlit",
+  "summary": "import streamlit (no server)",
+  "platforms": [
+    "any"
+  ]
+}

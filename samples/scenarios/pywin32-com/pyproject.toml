@@ -1,0 +1,11 @@
+[project]
+name = "uvdrop-sample-pywin32-com"
+version = "0.0.1"
+description = "win32com import (Windows)"
+requires-python = ">=3.11"
+dependencies = [
+    "pywin32>=306",
+]
+
+[tool.uv]
+package = false

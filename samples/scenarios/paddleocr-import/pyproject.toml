@@ -1,0 +1,12 @@
+[project]
+name = "uvdrop-sample-paddleocr-import"
+version = "0.0.1"
+description = "import paddleocr (large)"
+requires-python = ">=3.11"
+dependencies = [
+    "paddleocr",
+    "paddlepaddle",
+]
+
+[tool.uv]
+package = false

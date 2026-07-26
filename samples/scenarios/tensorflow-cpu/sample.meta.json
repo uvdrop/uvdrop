@@ -1,0 +1,9 @@
+{
+  "id": "tensorflow-cpu",
+  "tier": "heavy",
+  "name": "TensorFlow",
+  "summary": "tf constant (large download)",
+  "platforms": [
+    "any"
+  ]
+}

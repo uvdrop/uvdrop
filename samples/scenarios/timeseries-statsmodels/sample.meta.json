@@ -1,0 +1,9 @@
+{
+  "id": "timeseries-statsmodels",
+  "tier": "medium",
+  "name": "Time series (statsmodels)",
+  "summary": "statsmodels import + tiny ARIMA-ready series",
+  "platforms": [
+    "any"
+  ]
+}

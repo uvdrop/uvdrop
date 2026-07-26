@@ -1,0 +1,210 @@
+{
+  "version": 1,
+  "catalog": "uvdrop scenario samples",
+  "base": "D:\\NoraDevOps\\NoraDevOpsClient\\uvdrop\\samples",
+  "apps": [
+    {
+      "id": "csv-xlsx-matplotlib",
+      "name": "CSV/XLSX → matplotlib",
+      "summary": "[light] pandas + openpyxl + matplotlib (Agg)",
+      "path": "scenarios/csv-xlsx-matplotlib",
+      "command": "main.py"
+    },
+    {
+      "id": "plotly-dashboard",
+      "name": "Plotly chart",
+      "summary": "[light] plotly figure build (no browser)",
+      "path": "scenarios/plotly-dashboard",
+      "command": "main.py"
+    },
+    {
+      "id": "unv-df4-mdf-hint",
+      "name": "Measurement file hint (ASAM)",
+      "summary": "[medium] asammdf for MDF; UNV/DF4 often need vendor SDKs — import smoke only",
+      "path": "scenarios/unv-df4-mdf-hint",
+      "command": "main.py"
+    },
+    {
+      "id": "pyside6-import",
+      "name": "PySide6 import",
+      "summary": "[medium] Qt binding smoke (no window)",
+      "path": "scenarios/pyside6-import",
+      "command": "main.py"
+    },
+    {
+      "id": "pyqt5-import",
+      "name": "PyQt5 import",
+      "summary": "[medium] Qt5 binding smoke (no window)",
+      "path": "scenarios/pyqt5-import",
+      "command": "main.py"
+    },
+    {
+      "id": "sklearn-basic",
+      "name": "scikit-learn",
+      "summary": "[light] fit a tiny model",
+      "path": "scenarios/sklearn-basic",
+      "command": "main.py"
+    },
+    {
+      "id": "lightgbm-basic",
+      "name": "LightGBM",
+      "summary": "[medium] tiny booster fit",
+      "path": "scenarios/lightgbm-basic",
+      "command": "main.py"
+    },
+    {
+      "id": "timeseries-statsmodels",
+      "name": "Time series (statsmodels)",
+      "summary": "[medium] statsmodels import + tiny ARIMA-ready series",
+      "path": "scenarios/timeseries-statsmodels",
+      "command": "main.py"
+    },
+    {
+      "id": "torch-cpu",
+      "name": "PyTorch CPU",
+      "summary": "[heavy] torch tensor op (CPU wheel)",
+      "path": "scenarios/torch-cpu",
+      "command": "main.py"
+    },
+    {
+      "id": "tensorflow-cpu",
+      "name": "TensorFlow",
+      "summary": "[heavy] tf constant (large download)",
+      "path": "scenarios/tensorflow-cpu",
+      "command": "main.py"
+    },
+    {
+      "id": "transformers-tiny",
+      "name": "Transformers",
+      "summary": "[heavy] import transformers (no model download)",
+      "path": "scenarios/transformers-tiny",
+      "command": "main.py"
+    },
+    {
+      "id": "diffusers-import",
+      "name": "Diffusers",
+      "summary": "[heavy] import diffusers (no pipeline download)",
+      "path": "scenarios/diffusers-import",
+      "command": "main.py"
+    },
+    {
+      "id": "opencv-pillow",
+      "name": "OpenCV + Pillow",
+      "summary": "[light] image array smoke",
+      "path": "scenarios/opencv-pillow",
+      "command": "main.py"
+    },
+    {
+      "id": "onnxruntime",
+      "name": "ONNX Runtime",
+      "summary": "[medium] onnxruntime import",
+      "path": "scenarios/onnxruntime",
+      "command": "main.py"
+    },
+    {
+      "id": "tflite-runtime-hint",
+      "name": "TFLite-ish (ai-edge-litert)",
+      "summary": "[medium] Prefer ai-edge-litert where tflite-runtime is unavailable",
+      "path": "scenarios/tflite-runtime-hint",
+      "command": "main.py"
+    },
+    {
+      "id": "ultralytics-yolo",
+      "name": "Ultralytics YOLO",
+      "summary": "[heavy] import ultralytics (no weights download)",
+      "path": "scenarios/ultralytics-yolo",
+      "command": "main.py"
+    },
+    {
+      "id": "paddleocr-import",
+      "name": "PaddleOCR",
+      "summary": "[heavy] import paddleocr (large)",
+      "path": "scenarios/paddleocr-import",
+      "command": "main.py"
+    },
+    {
+      "id": "pywin32-com",
+      "name": "pywin32 COM",
+      "summary": "[light] win32com import (Windows)",
+      "path": "scenarios/pywin32-com",
+      "command": "main.py"
+    },
+    {
+      "id": "pyautogui-import",
+      "name": "PyAutoGUI",
+      "summary": "[medium] import only (no input injection)",
+      "path": "scenarios/pyautogui-import",
+      "command": "main.py"
+    },
+    {
+      "id": "audio-librosa",
+      "name": "Audio (librosa)",
+      "summary": "[medium] librosa import",
+      "path": "scenarios/audio-librosa",
+      "command": "main.py"
+    },
+    {
+      "id": "camera-opencv",
+      "name": "Camera stack (OpenCV)",
+      "summary": "[light] VideoCapture API available — does not open a device",
+      "path": "scenarios/camera-opencv",
+      "command": "main.py"
+    },
+    {
+      "id": "flask-app",
+      "name": "Flask",
+      "summary": "[light] create Flask app object, no server",
+      "path": "scenarios/flask-app",
+      "command": "main.py"
+    },
+    {
+      "id": "fastapi-app",
+      "name": "FastAPI",
+      "summary": "[light] create FastAPI app object, no server",
+      "path": "scenarios/fastapi-app",
+      "command": "main.py"
+    },
+    {
+      "id": "bottle-app",
+      "name": "Bottle",
+      "summary": "[light] import bottle",
+      "path": "scenarios/bottle-app",
+      "command": "main.py"
+    },
+    {
+      "id": "django-setup",
+      "name": "Django",
+      "summary": "[medium] django.setup with minimal settings",
+      "path": "scenarios/django-setup",
+      "command": "main.py"
+    },
+    {
+      "id": "streamlit-import",
+      "name": "Streamlit",
+      "summary": "[medium] import streamlit (no server)",
+      "path": "scenarios/streamlit-import",
+      "command": "main.py"
+    },
+    {
+      "id": "gradio-import",
+      "name": "Gradio",
+      "summary": "[medium] import gradio (no server)",
+      "path": "scenarios/gradio-import",
+      "command": "main.py"
+    },
+    {
+      "id": "faiss-cpu",
+      "name": "FAISS CPU",
+      "summary": "[medium] tiny index add/search",
+      "path": "scenarios/faiss-cpu",
+      "command": "main.py"
+    },
+    {
+      "id": "stdlib-hello",
+      "name": "Stdlib hello",
+      "summary": "[light] no third-party deps (baseline timing)",
+      "path": "scenarios/stdlib-hello",
+      "command": "main.py"
+    }
+  ]
+}

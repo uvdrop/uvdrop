@@ -1,0 +1,9 @@
+[project]
+name = "uvdrop-sample-stdlib-hello"
+version = "0.0.1"
+description = "no third-party deps (baseline timing)"
+requires-python = ">=3.11"
+dependencies = []
+
+[tool.uv]
+package = false

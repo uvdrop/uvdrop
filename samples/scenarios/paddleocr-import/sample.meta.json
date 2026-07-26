@@ -1,0 +1,9 @@
+{
+  "id": "paddleocr-import",
+  "tier": "heavy",
+  "name": "PaddleOCR",
+  "summary": "import paddleocr (large)",
+  "platforms": [
+    "any"
+  ]
+}

@@ -1,7 +1,13 @@
-"""Fetch allowlist packages from a remote xlsx URL (stdlib only)."""
+"""Fetch allowlist packages from Excel (.xlsx) or CSV (URL or local path).
+
+Format:
+  A column = package name
+  B column = version rule (optional; * / 1.* / >=1.0 / …)
+"""
 
 from __future__ import annotations
 
+import csv
 import json
 import re
 import time
@@ -9,9 +15,12 @@ import urllib.error
 import urllib.request
 import xml.etree.ElementTree as ET
 import zipfile
-from io import BytesIO
+from io import BytesIO, StringIO
 from pathlib import Path
 
+from uvdrop.http_util import urlopen
+from uvdrop.i18n import t
+from uvdrop.package_spec import PackageRule, rules_to_dicts
 from uvdrop.paths import ensure_layout, policies_dir
 from uvdrop.settings import load_settings
 
@@ -20,14 +29,30 @@ _NS = {
     "r": "http://schemas.openxmlformats.org/officeDocument/2006/relationships",
 }
 
+_HEADER = {
+    "package",
+    "packages",
+    "name",
+    "名前",
+    "パッケージ",
+    "パッケージ名",
+    "version",
+    "versions",
+    "バージョン",
+}
+
 
 def _cache_path() -> Path:
     ensure_layout()
+    return policies_dir() / "allowlist.from-file.json"
+
+
+def _legacy_cache_path() -> Path:
     return policies_dir() / "allowlist.from-xlsx.json"
 
 
 def _meta_path() -> Path:
-    return policies_dir() / "allowlist.from-xlsx.meta.json"
+    return policies_dir() / "allowlist.from-file.meta.json"
 
 
 def _col_row(cell_ref: str) -> tuple[str, int]:
@@ -73,47 +98,107 @@ def _sheet_paths(zf: zipfile.ZipFile) -> list[str]:
     return paths or ["xl/worksheets/sheet1.xml"]
 
 
-def parse_package_names_from_xlsx(data: bytes) -> list[str]:
-    """Read first column values from the first worksheet as package names."""
-    names: list[str] = []
+def _cell_text(cell: ET.Element, shared: list[str]) -> str:
+    cell_type = cell.attrib.get("t")
+    v = cell.find("m:v", _NS)
+    if v is None or v.text is None:
+        return ""
+    if cell_type == "s":
+        try:
+            return shared[int(v.text)]
+        except (IndexError, ValueError):
+            return ""
+    return v.text
+
+
+def parse_package_rules_from_xlsx(data: bytes) -> list[PackageRule]:
+    """Read A=name, B=version from the first worksheet."""
+    rows: dict[int, dict[str, str]] = {}
     with zipfile.ZipFile(BytesIO(data)) as zf:
         shared = _shared_strings(zf)
         sheets = _sheet_paths(zf)
-        xml = zf.read(sheets[0])
-        root = ET.fromstring(xml)
+        root = ET.fromstring(zf.read(sheets[0]))
         for row in root.findall("m:sheetData/m:row", _NS):
             for cell in row.findall("m:c", _NS):
                 ref = cell.attrib.get("r", "A1")
-                col, _row = _col_row(ref)
-                if col != "A":
+                col, row_i = _col_row(ref)
+                if col not in {"A", "B"}:
                     continue
-                cell_type = cell.attrib.get("t")
-                v = cell.find("m:v", _NS)
-                if v is None or v.text is None:
-                    continue
-                if cell_type == "s":
-                    try:
-                        text = shared[int(v.text)]
-                    except (IndexError, ValueError):
-                        continue
-                else:
-                    text = v.text
-                text = text.strip()
-                if not text or text.lower() in {"package", "name", "packages", "パッケージ"}:
-                    continue
-                names.append(text.lower().replace("_", "-"))
-    # unique preserve order
+                text = _cell_text(cell, shared).strip()
+                rows.setdefault(row_i, {})[col] = text
+
+    out: list[PackageRule] = []
     seen: set[str] = set()
-    out: list[str] = []
-    for n in names:
-        if n not in seen:
-            seen.add(n)
-            out.append(n)
+    for row_i in sorted(rows):
+        name = (rows[row_i].get("A") or "").strip()
+        ver = (rows[row_i].get("B") or "").strip() or "*"
+        if not name or name.lower() in _HEADER:
+            continue
+        rule = PackageRule(name=name, version=ver).normalized()
+        if not rule.name or rule.name in seen:
+            continue
+        seen.add(rule.name)
+        out.append(rule)
     return out
 
 
-def sync_xlsx_allowlist(*, force: bool = False) -> Path | None:
-    """Download xlsx if configured; write allowlist.from-xlsx.json. Returns cache path."""
+def parse_package_names_from_xlsx(data: bytes) -> list[str]:
+    """Back-compat: names only."""
+    return [r.name for r in parse_package_rules_from_xlsx(data)]
+
+
+def parse_package_rules_from_csv(text: str) -> list[PackageRule]:
+    sample = text[:4096]
+    try:
+        dialect = csv.Sniffer().sniff(sample, delimiters=",;\t")
+    except csv.Error:
+        dialect = csv.excel
+    reader = csv.reader(StringIO(text), dialect)
+    out: list[PackageRule] = []
+    seen: set[str] = set()
+    for row in reader:
+        if not row:
+            continue
+        name = (row[0] if len(row) > 0 else "").strip()
+        ver = (row[1] if len(row) > 1 else "").strip() or "*"
+        if not name or name.lower() in _HEADER:
+            continue
+        rule = PackageRule(name=name, version=ver).normalized()
+        if not rule.name or rule.name in seen:
+            continue
+        seen.add(rule.name)
+        out.append(rule)
+    return out
+
+
+def _looks_like_csv(source: str, data: bytes) -> bool:
+    lower = source.lower().split("?", 1)[0]
+    if lower.endswith(".csv") or lower.endswith(".txt"):
+        return True
+    if lower.endswith(".xlsx") or lower.endswith(".xlsm"):
+        return False
+    head = data[:8]
+    # ZIP/xlsx magic
+    if head.startswith(b"PK"):
+        return False
+    try:
+        data[:200].decode("utf-8")
+        return True
+    except UnicodeDecodeError:
+        return False
+
+
+def _load_bytes(source: str) -> bytes:
+    path = Path(source)
+    if path.is_file():
+        return path.read_bytes()
+    req = urllib.request.Request(source, headers={"User-Agent": "uvdrop"}, method="GET")
+    with urlopen(req, timeout=30) as resp:
+        return resp.read()
+
+
+def sync_file_allowlist(*, force: bool = False) -> Path | None:
+    """Download / read Excel or CSV; write allowlist.from-file.json."""
     settings = load_settings()
     if not settings.xlsx.enabled or not settings.xlsx.url:
         return None
@@ -130,29 +215,37 @@ def sync_xlsx_allowlist(*, force: bool = False) -> Path | None:
         except (OSError, json.JSONDecodeError, TypeError, ValueError):
             pass
 
-    req = urllib.request.Request(
-        settings.xlsx.url,
-        headers={"User-Agent": "uvdrop"},
-        method="GET",
-    )
+    source = settings.xlsx.url.strip()
     try:
-        with urllib.request.urlopen(req, timeout=30) as resp:
-            data = resp.read()
+        data = _load_bytes(source)
     except (urllib.error.URLError, TimeoutError, OSError) as e:
         if cache.is_file():
             return cache
-        raise RuntimeError(f"xlsx download failed: {e}") from e
+        legacy = _legacy_cache_path()
+        if legacy.is_file():
+            return legacy
+        raise RuntimeError(t("xlsx.load_fail", e=e)) from e
 
-    packages = parse_package_names_from_xlsx(data)
+    if _looks_like_csv(source, data):
+        text = data.decode("utf-8-sig", errors="replace")
+        rules = parse_package_rules_from_csv(text)
+    else:
+        rules = parse_package_rules_from_xlsx(data)
+
     payload = {
-        "version": 1,
+        "version": 2,
         "mode": "warn",
-        "source": settings.xlsx.url,
-        "packages": packages,
+        "source": source,
+        "packages": rules_to_dicts(rules),
     }
     cache.write_text(json.dumps(payload, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
     meta.write_text(
-        json.dumps({"fetched_at": now, "count": len(packages)}, indent=2) + "\n",
+        json.dumps({"fetched_at": now, "count": len(rules)}, indent=2) + "\n",
         encoding="utf-8",
     )
     return cache
+
+
+# Back-compat name used by older callers
+def sync_xlsx_allowlist(*, force: bool = False) -> Path | None:
+    return sync_file_allowlist(force=force)

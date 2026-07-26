@@ -1,0 +1,9 @@
+{
+  "id": "ultralytics-yolo",
+  "tier": "heavy",
+  "name": "Ultralytics YOLO",
+  "summary": "import ultralytics (no weights download)",
+  "platforms": [
+    "any"
+  ]
+}

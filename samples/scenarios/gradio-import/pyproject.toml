@@ -1,0 +1,11 @@
+[project]
+name = "uvdrop-sample-gradio-import"
+version = "0.0.1"
+description = "import gradio (no server)"
+requires-python = ">=3.11"
+dependencies = [
+    "gradio>=4.0",
+]
+
+[tool.uv]
+package = false

@@ -1,0 +1,11 @@
+[project]
+name = "uvdrop-sample-camera-opencv"
+version = "0.0.1"
+description = "VideoCapture API available — does not open a device"
+requires-python = ">=3.11"
+dependencies = [
+    "opencv-python-headless>=4.8",
+]
+
+[tool.uv]
+package = false

@@ -1,0 +1,9 @@
+{
+  "id": "pyautogui-import",
+  "tier": "medium",
+  "name": "PyAutoGUI",
+  "summary": "import only (no input injection)",
+  "platforms": [
+    "any"
+  ]
+}

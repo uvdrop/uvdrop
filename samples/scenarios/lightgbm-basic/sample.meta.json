@@ -1,0 +1,9 @@
+{
+  "id": "lightgbm-basic",
+  "tier": "medium",
+  "name": "LightGBM",
+  "summary": "tiny booster fit",
+  "platforms": [
+    "any"
+  ]
+}

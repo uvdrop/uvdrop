@@ -1,0 +1,11 @@
+[project]
+name = "uvdrop-sample-tensorflow-cpu"
+version = "0.0.1"
+description = "tf constant (large download)"
+requires-python = ">=3.11"
+dependencies = [
+    "tensorflow",
+]
+
+[tool.uv]
+package = false

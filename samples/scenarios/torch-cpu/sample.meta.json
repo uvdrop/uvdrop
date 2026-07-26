@@ -1,0 +1,9 @@
+{
+  "id": "torch-cpu",
+  "tier": "heavy",
+  "name": "PyTorch CPU",
+  "summary": "torch tensor op (CPU wheel)",
+  "platforms": [
+    "any"
+  ]
+}

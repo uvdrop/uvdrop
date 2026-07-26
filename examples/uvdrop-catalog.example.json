@@ -1,0 +1,19 @@
+{
+  "version": 1,
+  "catalog": "Example team apps",
+  "apps": [
+    {
+      "id": "hello-sample",
+      "name": "Hello (folder next to this file)",
+      "summary": "Relative path example — put a real app folder beside the catalog.",
+      "path": "hello-sample",
+      "command": "main.py"
+    },
+    {
+      "name": "Report tool (UNC example)",
+      "summary": "Replace with a real share path in your environment.",
+      "path": "\\\\fileserver\\uvdrop-apps\\report-tool",
+      "command": "main.py --quiet"
+    }
+  ]
+}

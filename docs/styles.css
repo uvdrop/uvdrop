@@ -58,6 +58,13 @@ pre {
   text-decoration: none;
   letter-spacing: -0.02em;
 }
+.top-right {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 0.75rem 1.25rem;
+}
 nav {
   display: flex;
   flex-wrap: wrap;
@@ -67,6 +74,33 @@ nav {
 nav a { color: var(--muted); text-decoration: none; }
 nav a:hover { color: var(--ink); }
 nav .gh {
+  color: var(--accent);
+  font-weight: 600;
+}
+.lang-switch {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.15rem;
+  padding: 0.15rem;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  background: var(--panel);
+}
+.lang-switch button {
+  font-family: var(--sans);
+  font-size: 0.78rem;
+  font-weight: 500;
+  line-height: 1.2;
+  padding: 0.35rem 0.55rem;
+  border: 0;
+  border-radius: 4px;
+  background: transparent;
+  color: var(--muted);
+  cursor: pointer;
+}
+.lang-switch button:hover { color: var(--ink); }
+.lang-switch button.is-active {
+  background: #d7ebe1;
   color: var(--accent);
   font-weight: 600;
 }
@@ -207,5 +241,6 @@ footer {
 
 @media (max-width: 720px) {
   .hero { min-height: auto; padding-top: 2.5rem; }
+  .top-right { justify-content: flex-end; }
   nav { justify-content: flex-end; }
 }

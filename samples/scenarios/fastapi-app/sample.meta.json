@@ -1,0 +1,9 @@
+{
+  "id": "fastapi-app",
+  "tier": "light",
+  "name": "FastAPI",
+  "summary": "create FastAPI app object, no server",
+  "platforms": [
+    "any"
+  ]
+}

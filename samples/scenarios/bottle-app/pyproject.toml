@@ -1,0 +1,11 @@
+[project]
+name = "uvdrop-sample-bottle-app"
+version = "0.0.1"
+description = "import bottle"
+requires-python = ">=3.11"
+dependencies = [
+    "bottle>=0.12",
+]
+
+[tool.uv]
+package = false

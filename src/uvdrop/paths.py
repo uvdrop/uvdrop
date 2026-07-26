@@ -46,19 +46,28 @@ def registry_path() -> Path:
     return app_root() / "apps.json"
 
 
+def usage_path() -> Path:
+    return app_root() / "usage.json"
+
+
 def ensure_layout() -> None:
     for d in (apps_dir(), envs_dir(), dotenv_dir(), policies_dir(), launchers_dir()):
         d.mkdir(parents=True, exist_ok=True)
     _seed_policy_examples()
 
 
+# Stock packages from policies/allowlist.example.json — used to detect untouched seeds.
+_STOCK_ALLOWLIST_PACKAGES = frozenset({"requests", "httpx", "pydantic", "rich", "typer"})
+
+
 def _seed_policy_examples() -> None:
-    """Copy example policies into AppData once, if missing."""
+    """Copy example policies into AppData as examples only (not auto-enforced)."""
     examples = project_root() / "policies"
     if not examples.is_dir():
         return
+    # allowlist: never auto-activate. python-versions: still seed as active default.
     mapping = {
-        "allowlist.example.json": "allowlist.json",
+        "allowlist.example.json": "allowlist.example.json",
         "python-versions.example.json": "python-versions.json",
     }
     for src_name, dest_name in mapping.items():
@@ -66,6 +75,39 @@ def _seed_policy_examples() -> None:
         dest = policies_dir() / dest_name
         if src.is_file() and not dest.is_file():
             dest.write_text(src.read_text(encoding="utf-8"), encoding="utf-8")
+    _retire_stock_allowlist_seed()
+
+
+def _retire_stock_allowlist_seed() -> None:
+    """Disable first-run allowlist.json that was copied from the example (pre-0.3.6).
+
+    That seed silently allowed httpx/requests/… so manual allowlist tests looked broken.
+    """
+    import json
+
+    active = policies_dir() / "allowlist.json"
+    if not active.is_file():
+        return
+    try:
+        data = json.loads(active.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError):
+        return
+    pkgs = {str(x).lower().replace("_", "-") for x in (data.get("packages") or [])}
+    notes = str(data.get("notes") or "")
+    stock = pkgs == set(_STOCK_ALLOWLIST_PACKAGES) or "Copy to %LOCALAPPDATA%" in notes
+    if not stock:
+        return
+    example = policies_dir() / "allowlist.example.json"
+    if not example.is_file():
+        try:
+            active.replace(example)
+        except OSError:
+            return
+    else:
+        try:
+            active.unlink()
+        except OSError:
+            return
 
 
 def slugify(name: str) -> str:

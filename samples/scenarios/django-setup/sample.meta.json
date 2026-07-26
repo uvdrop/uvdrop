@@ -1,0 +1,9 @@
+{
+  "id": "django-setup",
+  "tier": "medium",
+  "name": "Django",
+  "summary": "django.setup with minimal settings",
+  "platforms": [
+    "any"
+  ]
+}

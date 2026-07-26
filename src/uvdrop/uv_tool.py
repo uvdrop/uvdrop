@@ -5,26 +5,65 @@ from __future__ import annotations
 import os
 import shutil
 import subprocess
+from dataclasses import dataclass
 from pathlib import Path
 
+from uvdrop.i18n import t
 from uvdrop.paths import bundled_uv
+from uvdrop.settings import load_settings, proxy_environ
 
 
 class UvNotFoundError(RuntimeError):
     pass
 
 
+@dataclass(frozen=True)
+class UvInfo:
+    path: Path
+    source: str  # bundled | path
+    version: str
+
+
 def resolve_uv() -> Path:
+    return resolve_uv_info().path
+
+
+def resolve_uv_info() -> UvInfo:
     bundled = bundled_uv()
     if bundled:
-        return bundled
+        return UvInfo(path=bundled, source="bundled", version=_uv_version(bundled))
     which = shutil.which("uv") or shutil.which("uv.exe")
     if which:
-        return Path(which)
-    raise UvNotFoundError(
-        "uv.exe not found. Place it under resources/tools/windows-x64/uv.exe "
-        "or add uv to PATH."
-    )
+        p = Path(which)
+        return UvInfo(path=p, source="path", version=_uv_version(p))
+    raise UvNotFoundError(t("uv.not_found"))
+
+
+def _uv_version(uv: Path) -> str:
+    try:
+        flags = 0
+        if os.name == "nt":
+            flags = subprocess.CREATE_NO_WINDOW  # type: ignore[attr-defined]
+        proc = subprocess.run(
+            [str(uv), "--version"],
+            check=False,
+            text=True,
+            capture_output=True,
+            timeout=15,
+            creationflags=flags,
+        )
+        line = (proc.stdout or proc.stderr or "").strip().splitlines()
+        return line[0] if line else "unknown"
+    except (OSError, subprocess.TimeoutExpired):
+        return "unknown"
+
+
+def _base_env(extra: dict[str, str] | None = None) -> dict[str, str]:
+    full = os.environ.copy()
+    full.update(proxy_environ(load_settings()))
+    if extra:
+        full.update(extra)
+    return full
 
 
 def run_uv(
@@ -35,16 +74,17 @@ def run_uv(
     check: bool = True,
 ) -> subprocess.CompletedProcess[str]:
     uv = resolve_uv()
-    full_env = os.environ.copy()
-    if env:
-        full_env.update(env)
+    flags = 0
+    if os.name == "nt":
+        flags = subprocess.CREATE_NO_WINDOW  # type: ignore[attr-defined]
     return subprocess.run(
         [str(uv), *args],
         cwd=str(cwd) if cwd else None,
-        env=full_env,
+        env=_base_env(env),
         check=check,
         text=True,
         capture_output=True,
+        creationflags=flags,
     )
 
 
@@ -66,22 +106,38 @@ def run_detached(
     python_args: list[str],
     *,
     waitable: bool = False,
+    show_console: bool | None = None,
 ) -> subprocess.Popen[bytes]:
     """Start app via uv run.
 
     waitable=True keeps a handle suitable for proc.wait() (temp-run cleanup).
     waitable=False fully detaches on Windows (kept apps).
+
+    show_console=None reads settings.guard.show_console.
+    False (default): hide the black console window.
+    True: open a new console so stdout/stderr are visible for debugging.
     """
+    if show_console is None:
+        show_console = bool(load_settings().guard.show_console)
+
     uv = resolve_uv()
-    env = os.environ.copy()
-    env["UV_PROJECT_ENVIRONMENT"] = str(venv_dir)
+    env = _base_env({"UV_PROJECT_ENVIRONMENT": str(venv_dir)})
     creationflags = 0
     if os.name == "nt":
-        if waitable:
-            creationflags = subprocess.CREATE_NEW_PROCESS_GROUP  # type: ignore[attr-defined]
+        if show_console:
+            # Dedicated console so print() / logs are visible
+            creationflags = (
+                subprocess.CREATE_NEW_CONSOLE | subprocess.CREATE_NEW_PROCESS_GROUP  # type: ignore[attr-defined]
+            )
+        elif waitable:
+            creationflags = (
+                subprocess.CREATE_NO_WINDOW | subprocess.CREATE_NEW_PROCESS_GROUP  # type: ignore[attr-defined]
+            )
         else:
             creationflags = (
-                subprocess.CREATE_NEW_PROCESS_GROUP | subprocess.DETACHED_PROCESS  # type: ignore[attr-defined]
+                subprocess.CREATE_NO_WINDOW
+                | subprocess.CREATE_NEW_PROCESS_GROUP
+                | subprocess.DETACHED_PROCESS  # type: ignore[attr-defined]
             )
     cmd = [str(uv), "run", "--directory", str(project_dir), "python", *python_args]
     return subprocess.Popen(
@@ -89,5 +145,5 @@ def run_detached(
         cwd=str(project_dir),
         env=env,
         creationflags=creationflags,
-        close_fds=not waitable,
+        close_fds=not waitable and not show_console,
     )
