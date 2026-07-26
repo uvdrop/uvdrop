@@ -2,7 +2,7 @@
   "id": "pyqt5-import",
   "tier": "medium",
   "name": "PyQt5 import",
-  "summary": "Qt5 binding smoke (no window)",
+  "summary": "Qt5 binding smoke (no window). Pins PyQt5-Qt5==5.15.2 — newer Qt5 wheels dropped win_amd64 on PyPI",
   "platforms": [
     "any"
   ]

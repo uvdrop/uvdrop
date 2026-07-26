@@ -34,7 +34,7 @@
     {
       "id": "pyqt5-import",
       "name": "PyQt5 import",
-      "summary": "[medium] Qt5 binding smoke (no window)",
+      "summary": "[medium] Qt5 binding smoke (no window). Pins PyQt5-Qt5==5.15.2 — newer Qt5 wheels dropped win_amd64 on PyPI",
       "path": "scenarios/pyqt5-import",
       "command": "main.py"
     },

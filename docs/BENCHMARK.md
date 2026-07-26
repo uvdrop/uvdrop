@@ -48,6 +48,16 @@ share only the disposable uv cache for that run.
 
 If `sync_s` is huge, check network, proxy (`Settings → Proxy`), PyPI mirror, and AV scanning of `%LOCALAPPDATA%\uvdrop\envs`.
 
+**Warm vs cold cache:** the machine-wide uv cache (`UV_CACHE_DIR`, usually under the user profile) survives between disposable bench runs. A PC that already downloaded PySide6 / sklearn once will look much faster than a brand-new machine. For a first-PC estimate, run with an empty cache:
+
+```powershell
+$env:UV_CACHE_DIR = "$env:TEMP\uvdrop-cold-cache"
+New-Item -ItemType Directory -Force $env:UV_CACHE_DIR | Out-Null
+python scripts/bench_samples.py --tier light --workers 3
+```
+
+**PyQt5 on Windows:** current `PyQt5-Qt5` releases on PyPI often omit `win_amd64` wheels. The sample pins `PyQt5-Qt5==5.15.2` (last Windows build). Prefer PySide6 when possible.
+
 ## Tiers
 
 | Tier | Intent |

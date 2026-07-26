@@ -1,10 +1,11 @@
 [project]
 name = "uvdrop-sample-pyqt5-import"
 version = "0.0.1"
-description = "Qt5 binding smoke (no window)"
+description = "Qt5 binding smoke (no window). Pins PyQt5-Qt5==5.15.2 — newer Qt5 wheels dropped win_amd64 on PyPI"
 requires-python = ">=3.11"
 dependencies = [
     "PyQt5>=5.15",
+    "PyQt5-Qt5==5.15.2",
 ]
 
 [tool.uv]
