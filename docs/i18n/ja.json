@@ -30,6 +30,8 @@
   "features.console.body": "黒い文字の窓は<strong>既定では隠し</strong>ます。詳しく見たいときだけ、設定から表示できます。",
   "features.usage.title": "使用履歴",
   "features.usage.body": "最終起動や起動回数、日・週・月ごとのグラフで「どれをよく使っているか」を把握できます。",
+  "features.hibernate.title": "仮想環境の冬眠",
+  "features.hibernate.body": "アプリ一覧・作業フォルダ・.env を残したまま venv だけを手動で冬眠。既定OFFの設定で、指定日数使っていない環境を起動時に整理できます。uv のグローバルキャッシュは残します。",
   "features.lang.title": "表示言語",
   "features.lang.body": "アプリ内で日本語 / English / 中文を切り替えられます。このサイトも同じ3言語に対応しています。",
   "features.shortcut.title": "デスクトップショートカット",

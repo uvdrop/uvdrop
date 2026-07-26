@@ -13,13 +13,13 @@ from tkinter import colorchooser, filedialog, messagebox, simpledialog, ttk
 from uvdrop import __version__
 from uvdrop.app_env import open_dotenv_in_notepad
 from uvdrop.catalog import CatalogApp, check_app_path, load_all_catalogs
-from uvdrop.cleanup import cleanup_app, gc_stale_temp_apps
+from uvdrop.cleanup import cleanup_app, gc_inactive_venvs, gc_stale_temp_apps, hibernate_venv
 from uvdrop.clipboard_image import clipboard_png
 from uvdrop.i18n import LANG_EN, LANG_JA, LANG_ZH, apply_from_settings, language_label, t
 from uvdrop.launcher import PreparedLaunch, execute_launch, prepare_launch, prepare_relaunch
 from uvdrop.appicon import ensure_ico, find_icon_candidates
 from uvdrop.package_spec import version_rule_guide
-from uvdrop.paths import apps_dir, ensure_layout, launchers_dir, policies_dir, project_root
+from uvdrop.paths import apps_dir, ensure_layout, envs_dir, launchers_dir, policies_dir, project_root
 from uvdrop.policy import needs_launch_confirm
 from uvdrop.registry import load_registry, set_icon
 from uvdrop.usage import DAY, MONTH, WEEK, buckets
@@ -149,9 +149,14 @@ class UvdropApp(tk.Tk):
         self.minsize(820, 600)
         self.configure(bg=self.BG)
         ensure_layout()
-        ensure_default_settings()
+        settings = ensure_default_settings()
         apply_from_settings()
         removed = gc_stale_temp_apps()
+        hibernated = (
+            gc_inactive_venvs(settings.storage.inactive_days)
+            if settings.storage.hibernate_enabled
+            else []
+        )
 
         self._busy = False
         self._card_widgets: list[tk.Misc] = []
@@ -164,6 +169,11 @@ class UvdropApp(tk.Tk):
         self._maximize()
         if removed:
             self._log(f"cleaned leftover temp apps: {', '.join(removed)}", reveal=False)
+        if hibernated:
+            self._log(
+                t("hibernate.gc_log", n=len(hibernated), keys=", ".join(hibernated)),
+                reveal=False,
+            )
 
     def _maximize(self) -> None:
         try:
@@ -362,6 +372,7 @@ class UvdropApp(tk.Tk):
             (t("app.relaunch"), self._relaunch_selected),
             (t("app.edit_env"), self._edit_env),
             (t("app.shortcut"), self._make_shortcut),
+            (t("app.hibernate"), self._hibernate_selected),
             (t("app.delete"), self._delete_selected),
             (t("app.refresh"), self._refresh_list),
         ):
@@ -564,13 +575,18 @@ class UvdropApp(tk.Tk):
         records.sort(key=sort_value, reverse=self._sort_desc)
 
         for rec in records:
+            mode = (
+                t("app.mode_hibernated")
+                if rec.mode == "keep" and not (envs_dir() / rec.key).exists()
+                else t("app.mode_ready") if rec.mode == "keep" else rec.mode
+            )
             self.tree.insert(
                 "",
                 tk.END,
                 iid=rec.key,
                 values=(
                     rec.name,
-                    rec.mode,
+                    mode,
                     self._format_last_run(rec.last_run_at),
                     rec.run_count or 0,
                     rec.workspace,
@@ -1900,6 +1916,37 @@ class UvdropApp(tk.Tk):
         ).pack(side=tk.RIGHT, padx=(0, 8))
         win.bind("<Escape>", lambda _e: win.destroy())
 
+    def _hibernate_selected(self) -> None:
+        key = self._selected_key()
+        if not key:
+            messagebox.showinfo("uvdrop", t("dlg.select_app"), parent=self)
+            return
+        rec = load_registry().get(key)
+        label = rec.name if rec else key
+        venv = envs_dir() / key
+        if not venv.exists():
+            messagebox.showinfo("uvdrop", t("hibernate.already", name=label), parent=self)
+            return
+        if not messagebox.askyesno(
+            "uvdrop",
+            t("hibernate.confirm", name=label),
+            parent=self,
+        ):
+            return
+        try:
+            reclaimed = hibernate_venv(key)
+        except OSError as e:
+            messagebox.showerror("uvdrop", t("hibernate.failed", e=e), parent=self)
+            return
+        self._refresh_list()
+        mib = reclaimed / (1024 * 1024)
+        self._log(t("hibernate.done", name=label, size=f"{mib:.1f} MiB"))
+        messagebox.showinfo(
+            "uvdrop",
+            t("hibernate.done", name=label, size=f"{mib:.1f} MiB"),
+            parent=self,
+        )
+
     def _delete_selected(self) -> None:
         key = self._selected_key()
         if not key:
@@ -1972,10 +2019,23 @@ class UvdropApp(tk.Tk):
                     parent=win,
                 ):
                     return
+            try:
+                inactive_days = int(storage_days.get())
+                if not 1 <= inactive_days <= 3650:
+                    raise ValueError
+            except ValueError:
+                messagebox.showerror(
+                    t("settings.tab_storage"),
+                    t("settings.hibernate_days_invalid"),
+                    parent=win,
+                )
+                return
             s.guard.confirm_before_run = bool(confirm_en.get())
             s.guard.no_allowlist = no_al.get() or "confirm"
             s.guard.allow_requirements_txt = bool(req_en.get())
             s.guard.show_console = bool(console_en.get())
+            s.storage.hibernate_enabled = bool(storage_en.get())
+            s.storage.inactive_days = inactive_days
             s.ui_language = lang_var.get() or "auto"
             s.allowlist.enabled = bool(al_en.get())
             s.allowlist.packages = al_table.get_rules()
@@ -2105,6 +2165,50 @@ class UvdropApp(tk.Tk):
             wraplength=520,
             justify=tk.LEFT,
         ).pack(anchor=tk.W, pady=(8, 0))
+
+        # --- storage / venv hibernation tab (scrollable) ---
+        tab_storage_outer = ttk.Frame(nb)
+        nb.add(tab_storage_outer, text=t("settings.tab_storage"))
+        _storage_canvas, tab_storage = _scrollable_panel(
+            tab_storage_outer, bg=self.BG, padding=12
+        )
+        storage_en = tk.BooleanVar(value=s.storage.hibernate_enabled)
+        storage_days = tk.StringVar(value=str(s.storage.inactive_days))
+        ttk.Label(
+            tab_storage,
+            text=t("settings.hibernate_title"),
+            style="Section.TLabel",
+        ).pack(anchor=tk.W)
+        ttk.Label(
+            tab_storage,
+            text=t("settings.hibernate_help"),
+            style="Hint.TLabel",
+            wraplength=520,
+            justify=tk.LEFT,
+        ).pack(anchor=tk.W, pady=(6, 14))
+        ttk.Checkbutton(
+            tab_storage,
+            text=t("settings.hibernate_enable"),
+            variable=storage_en,
+        ).pack(anchor=tk.W)
+        days_row = ttk.Frame(tab_storage)
+        days_row.pack(fill=tk.X, pady=(10, 0))
+        ttk.Label(days_row, text=t("settings.hibernate_after")).pack(side=tk.LEFT)
+        ttk.Spinbox(
+            days_row,
+            from_=1,
+            to=3650,
+            width=7,
+            textvariable=storage_days,
+        ).pack(side=tk.LEFT, padx=(8, 8))
+        ttk.Label(days_row, text=t("settings.hibernate_days")).pack(side=tk.LEFT)
+        ttk.Label(
+            tab_storage,
+            text=t("settings.hibernate_note"),
+            style="Hint.TLabel",
+            wraplength=520,
+            justify=tk.LEFT,
+        ).pack(anchor=tk.W, pady=(14, 0))
 
         # --- allowlist tab (scrollable) ---
         tab_al_outer = ttk.Frame(nb)

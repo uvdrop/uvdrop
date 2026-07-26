@@ -59,6 +59,14 @@ class GuardSettings:
 
 
 @dataclass
+class StorageSettings:
+    """Opt-in venv hibernation. App metadata and workspaces stay intact."""
+
+    hibernate_enabled: bool = False
+    inactive_days: int = 14
+
+
+@dataclass
 class CatalogRef:
     """Local path or HTTP(S) URL to a catalog JSON (source of truth for listed apps)."""
 
@@ -73,6 +81,7 @@ class Settings:
     allowlist: ManualAllowlistSettings = field(default_factory=ManualAllowlistSettings)
     blocklist: BlocklistSettings = field(default_factory=BlocklistSettings)
     guard: GuardSettings = field(default_factory=GuardSettings)
+    storage: StorageSettings = field(default_factory=StorageSettings)
     catalogs: list[CatalogRef] = field(default_factory=list)
     ui_language: str = "auto"  # auto | ja | en | zh
 
@@ -83,6 +92,7 @@ class Settings:
         al_raw = data.get("allowlist") or {}
         bl_raw = data.get("blocklist") or {}
         guard_raw = data.get("guard") or {}
+        storage_raw = data.get("storage") or {}
         catalogs_raw = data.get("catalogs") or []
 
         pkgs = al_raw.get("packages", [])
@@ -133,6 +143,10 @@ class Settings:
                 no_allowlist=str(guard_raw.get("no_allowlist", "confirm")),
                 allow_requirements_txt=bool(guard_raw.get("allow_requirements_txt", True)),
                 show_console=bool(guard_raw.get("show_console", False)),
+            ),
+            storage=StorageSettings(
+                hibernate_enabled=bool(storage_raw.get("hibernate_enabled", False)),
+                inactive_days=max(1, int(storage_raw.get("inactive_days", 14))),
             ),
             catalogs=catalogs,
             ui_language=str(data.get("ui_language") or "auto").strip() or "auto",
@@ -186,6 +200,7 @@ def save_settings(settings: Settings) -> None:
             "packages": rules_to_dicts(settings.blocklist.packages),
         },
         "guard": asdict(settings.guard),
+        "storage": asdict(settings.storage),
         "catalogs": [asdict(c) for c in settings.catalogs],
         "ui_language": settings.ui_language or "auto",
     }

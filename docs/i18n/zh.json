@@ -30,6 +30,8 @@
   "features.console.body": "黑色控制台窗口<strong>默认隐藏</strong>。需要查看详细输出时，再在设置中打开。",
   "features.usage.title": "使用历史",
   "features.usage.body": "可查看最近启动时间、启动次数，以及按日 / 周 / 月的图表，了解常用应用。",
+  "features.hibernate.title": "虚拟环境休眠",
+  "features.hibernate.body": "保留应用条目、工作区和 .env，仅手动删除 venv。也可选择启用启动时规则，休眠超过指定天数未使用的环境。uv 全局缓存会保留。",
   "features.lang.title": "显示语言",
   "features.lang.body": "可在应用内切换日本語 / English / 中文。本站点同样支持这三种语言。",
   "features.shortcut.title": "桌面快捷方式",

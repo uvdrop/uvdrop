@@ -25,6 +25,8 @@ def test_allowlist_persists(tmp_path, monkeypatch) -> None:
     s.allowlist.mode = "block"
     s.blocklist.enabled = True
     s.blocklist.packages = [PackageRule("evil", "*")]
+    s.storage.hibernate_enabled = True
+    s.storage.inactive_days = 30
     save_settings(s)
     loaded = load_settings()
     assert loaded.allowlist.enabled is True
@@ -35,6 +37,8 @@ def test_allowlist_persists(tmp_path, monkeypatch) -> None:
     assert loaded.allowlist.mode == "block"
     assert loaded.blocklist.enabled is True
     assert loaded.blocklist.packages[0].name == "evil"
+    assert loaded.storage.hibernate_enabled is True
+    assert loaded.storage.inactive_days == 30
     assert (app_root() / "settings.json").is_file()
 
 

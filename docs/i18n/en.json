@@ -30,6 +30,8 @@
   "features.console.body": "The black console window is <strong>hidden by default</strong>. Turn it on in settings only when you want to see detailed output.",
   "features.usage.title": "Usage history",
   "features.usage.body": "See last launch time, launch counts, and day / week / month charts so you know what you use most.",
+  "features.hibernate.title": "Venv hibernation",
+  "features.hibernate.body": "Manually remove only a venv while keeping the app entry, workspace, and .env. An opt-in startup rule can hibernate environments unused for a chosen number of days. The uv global cache stays.",
   "features.lang.title": "Display language",
   "features.lang.body": "Switch Japanese / English / Chinese inside the app. This site supports the same three languages.",
   "features.shortcut.title": "Desktop shortcuts",

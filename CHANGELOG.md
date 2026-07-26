@@ -19,6 +19,8 @@ This project follows [Semantic Versioning](https://semver.org/).
 - Python 本体の **サポート切れ / 切れまで1年以内** 警告（`python-versions.json` の `eol`）
 - 想定ユース向けシナリオサンプル + `scripts/bench_samples.py`
   （並列実行、venv 作成〜起動〜削除、グラフィカルな HTML 分析レポート、作業データの完全破棄）
+- アプリ一覧を維持したまま venv だけを削除する「環境を冬眠」。手動実行に加え、
+  既定OFFの設定で未使用日数を指定した起動時GCに対応（uv グローバルキャッシュは維持）
 - `docs/CATALOG.md` / `docs/PYTHON_SUPPORT.md` / `docs/BENCHMARK.md` と `examples/uvdrop-catalog.example.json`
 
 ### Changed
