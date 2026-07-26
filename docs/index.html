@@ -17,6 +17,7 @@
     <div class="top-right">
       <nav>
         <a href="#features" data-i18n="nav.features">Features</a>
+        <a href="#catalog" data-i18n="nav.catalog">Catalog</a>
         <a href="#usage" data-i18n="nav.usage">Usage</a>
         <a href="#ops" data-i18n="nav.ops">Ops</a>
         <a href="#roadmap" data-i18n="nav.roadmap">Roadmap</a>
@@ -46,11 +47,15 @@
 
     <section id="features" class="block">
       <h2 data-i18n="features.title">Features</h2>
-      <p class="lede" data-i18n="features.lede">No portal, no Git sync. Focused on starting local Python apps with a clear look before anything is installed.</p>
+      <p class="lede" data-i18n="features.lede">Start local Python apps with a clear look before anything is installed. Shared catalogs help teams open the same apps without scanning folders.</p>
       <ul class="grid">
         <li>
           <h3 data-i18n-html="features.drop.title">Drop &amp; Run</h3>
           <p data-i18n-html="features.drop.body">Pick a folder or ZIP that has a <code>pyproject.toml</code> in the expected place.</p>
+        </li>
+        <li>
+          <h3 data-i18n="features.catalog.title">Shared catalogs</h3>
+          <p data-i18n-html="features.catalog.body">Register catalog files or HTTP API endpoints. Open listed apps with the same review / allow / block guards.</p>
         </li>
         <li>
           <h3 data-i18n="features.env.title">Dedicated settings file</h3>
@@ -83,6 +88,29 @@
       </ul>
     </section>
 
+    <section id="catalog" class="block">
+      <h2 data-i18n="catalog.title">Shared catalogs</h2>
+      <p class="lede" data-i18n-html="catalog.lede">A catalog is a table of contents for team apps. Folders are never auto-scanned. See <a href="https://github.com/uvdrop/uvdrop/blob/main/docs/CATALOG.md">docs/CATALOG.md</a>.</p>
+      <ol class="steps">
+        <li>
+          <strong data-i18n="catalog.step1.title">Publish a catalog</strong>
+          <p data-i18n-html="catalog.step1.body">Put apps on a share, then write a catalog JSON (name, summary, path, optional command).</p>
+        </li>
+        <li>
+          <strong data-i18n="catalog.step2.title">File or API endpoint</strong>
+          <p data-i18n-html="catalog.step2.body">Serve it as a local/UNC file or any HTTP(S) API that returns the same JSON. A <code>.json</code> suffix is not required.</p>
+        </li>
+        <li>
+          <strong data-i18n="catalog.step3.title">Register in Settings</strong>
+          <p data-i18n="catalog.step3.body">Settings → Catalogs → add a file path or endpoint URL (multiple catalogs OK).</p>
+        </li>
+        <li>
+          <strong data-i18n="catalog.step4.title">Open from catalog</strong>
+          <p data-i18n="catalog.step4.body">Main screen → Open from catalog → pick an app. Path access, required-file checks, and review dialogs still run.</p>
+        </li>
+      </ol>
+    </section>
+
     <section id="usage" class="block">
       <h2 data-i18n="usage.title">Usage</h2>
       <ol class="steps">
@@ -98,7 +126,11 @@ python -m uvdrop</code></pre>
         </li>
         <li>
           <strong data-i18n="usage.app.title">Hand over an app</strong>
-          <p data-i18n-html="usage.app.body">In the GUI, pick a folder or ZIP. After review before running, it stays in the list until you delete it.</p>
+          <p data-i18n-html="usage.app.body">In the GUI, pick a folder, ZIP, or Open from catalog. After review before running, it stays in the list until you delete it.</p>
+        </li>
+        <li>
+          <strong data-i18n="usage.catalog.title">Register catalogs</strong>
+          <p data-i18n-html="usage.catalog.body">In Settings → Catalogs, add shared catalog files or HTTP API endpoints. Details: <a href="https://github.com/uvdrop/uvdrop/blob/main/docs/CATALOG.md">docs/CATALOG.md</a>.</p>
         </li>
         <li>
           <strong data-i18n="usage.policy.title">Allow list and related settings</strong>
@@ -128,7 +160,7 @@ python -m uvdrop --version</code></pre>
           <tr><td><code>%LOCALAPPDATA%\uvdrop\envs\</code></td><td data-i18n="ops.envs">Per-app virtual environments (uv)</td></tr>
           <tr><td><code>%LOCALAPPDATA%\uvdrop\dotenv\</code></td><td data-i18n-html="ops.dotenv">Canonical <code>.env</code> files</td></tr>
           <tr><td><code>%LOCALAPPDATA%\uvdrop\policies\</code></td><td data-i18n="ops.policies">Allow list / block list / Python versions / Excel cache</td></tr>
-          <tr><td><code>%LOCALAPPDATA%\uvdrop\settings.json</code></td><td data-i18n="ops.settings">Allow &amp; block lists, Excel / CSV, proxy, and other settings</td></tr>
+          <tr><td><code>%LOCALAPPDATA%\uvdrop\settings.json</code></td><td data-i18n="ops.settings">Allow &amp; block lists, catalogs, Excel / CSV, proxy, and other settings</td></tr>
           <tr><td><code>%LOCALAPPDATA%\uvdrop\apps.json</code></td><td data-i18n="ops.appsjson">Registry of kept apps</td></tr>
           <tr><td><code>%LOCALAPPDATA%\uvdrop\usage.json</code></td><td data-i18n="ops.usage">Launch history (by day)</td></tr>
         </tbody>
@@ -151,6 +183,7 @@ python -m uvdrop --version</code></pre>
         <li><span class="done">done</span> <span data-i18n="roadmap.3">Usage history · optional console · language switcher</span></li>
         <li><span class="done">done</span> <span data-i18n="roadmap.4">Inno Setup docs · Setup.exe pipeline</span></li>
         <li><span class="done">done</span> <span data-i18n="roadmap.5">Three distribution paths · third-party notices · MSIX skeleton</span></li>
+        <li><span class="done">done</span> <span data-i18n="roadmap.catalog">Shared catalogs (file / HTTP API) · Python support-window warnings · scenario bench</span></li>
         <li><span class="next">next</span> <span data-i18n="roadmap.6">Steady signed Setup.exe / Store MSIX releases</span></li>
         <li><span class="later">later</span> <span data-i18n="roadmap.7">Excel Python-version sheet · CI auto-build</span></li>
       </ul>
@@ -158,6 +191,13 @@ python -m uvdrop --version</code></pre>
 
     <section id="changelog" class="block">
       <h2 data-i18n="changelog.title">Release notes</h2>
+      <article class="release">
+        <h3><span data-i18n="changelog.unreleased.title">Unreleased</span></h3>
+        <ul>
+          <li data-i18n="changelog.unreleased.1">Shared catalogs from files or HTTP API endpoints (no folder auto-scan)</li>
+          <li data-i18n="changelog.unreleased.2">Python EOL / nearing-EOL warnings and disposable parallel uv bench HTML reports</li>
+        </ul>
+      </article>
       <article class="release">
         <h3><span data-i18n="changelog.091.title">v0.9.1</span> <time datetime="2026-07-26">2026-07-26</time></h3>
         <ul>
