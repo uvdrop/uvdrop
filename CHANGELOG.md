@@ -7,6 +7,11 @@ This project follows [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+### Added
+
+- ローカルポータルに実用サンプル4本: Meet AV Check / Ghost Frame Recorder /
+  Supertonic Reader / OCR Bench（Baberu OCR 任意連携含む）
+
 ### Planned
 
 - CI that builds Setup.exe / MSIX on tagged releases

@@ -36,6 +36,34 @@
       "summary": "Pillow で小さな画像を生成。画像系依存の入口イメージ。",
       "path": "apps/pillow-thumb",
       "command": "main.py"
+    },
+    {
+      "id": "meet-av-check",
+      "name": "Meet AV Check",
+      "summary": "リモート会議前のカメラ・マイク確認。プレビューとレベルメータ、2秒録音テスト。",
+      "path": "apps/meet-av-check",
+      "command": "main.py"
+    },
+    {
+      "id": "ghost-frame-recorder",
+      "name": "Ghost Frame Recorder",
+      "summary": "半透明枠で画面領域を選び録画。PySide6 オーバーレイ＋マイク同時録音。",
+      "path": "apps/ghost-frame-recorder",
+      "command": "main.py"
+    },
+    {
+      "id": "supertonic-reader",
+      "name": "Supertonic Reader",
+      "summary": "Supertonic による読み上げ。原稿編集・声/速度/間の調整・WAV 書き出し。",
+      "path": "apps/supertonic-reader",
+      "command": "main.py"
+    },
+    {
+      "id": "ocr-bench",
+      "name": "OCR Bench",
+      "summary": "Tesseract / PyOCR / EasyOCR / Paddle / Baberu 等を一括比較。ボックス連動チェック付き。",
+      "path": "apps/ocr-bench",
+      "command": "main.py"
     }
   ]
 }

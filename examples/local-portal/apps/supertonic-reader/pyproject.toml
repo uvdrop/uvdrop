@@ -1,0 +1,14 @@
+[project]
+name = "uvdrop-portal-supertonic-reader"
+version = "0.0.1"
+description = "Tkinter TTS reader using supertonic"
+requires-python = ">=3.11"
+dependencies = [
+    "supertonic>=1.0",
+    "sounddevice>=0.4",
+    "soundfile>=0.12",
+    "numpy>=1.24",
+]
+
+[tool.uv]
+package = false

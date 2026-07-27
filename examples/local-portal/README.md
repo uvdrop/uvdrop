@@ -13,7 +13,31 @@ examples/local-portal/
     flask-health/         … Flask の極小ヘルスチェック
     csv-report/           … pandas + openpyxl（表計算っぽい）
     pillow-thumb/         … Pillow（画像系）
+    meet-av-check/        … カメラ・マイク確認（Tkinter + OpenCV + sounddevice）
+    ghost-frame-recorder/ … 画面領域録画オーバーレイ（PySide6 + mss）
+    supertonic-reader/    … Supertonic 読み上げ（初回 ~400MB DL）
+    ocr-bench/            … 複数 OCR エンジン比較
 ```
+
+### 追加ツール（実用サンプル）
+
+| アプリ | 用途 | 主な依存 |
+|---|---|---|
+| **Meet AV Check** | 会議前にカメラ映像・マイク音量を確認 | opencv-python-headless, sounddevice, pillow |
+| **Ghost Frame Recorder** | 半透明枠で任意矩形を画面録画（マイク同時） | PySide6, mss, opencv, imageio-ffmpeg |
+| **Supertonic Reader** | 原稿の TTS 読み上げ・WAV 出力 | supertonic（初回モデル DL） |
+| **OCR Bench** | 画像 OCR を複数エンジンで比較 | pytesseract, easyocr 等（Tesseract 本体は別途） |
+
+PaddleOCR / Baberu OCR / manga-ocr は `ocr-bench` の optional extras です。
+
+```powershell
+cd examples\local-portal\apps\ocr-bench
+uv sync --extra paddle
+uv sync --extra baberu
+uv sync --extra manga
+```
+
+詳細は各 `apps/*/README.md` を参照してください。
 
 ## 1. ファイルカタログ（いちばん簡単）
 
