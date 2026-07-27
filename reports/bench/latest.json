@@ -1,6 +1,6 @@
 {
   "meta": {
-    "started_at": "2026-07-26T15:06:28.880960+00:00",
+    "started_at": "2026-07-26T15:36:49.148178+00:00",
     "platform": "Windows-11-10.0.26200-SP0",
     "python": "3.12.10 (tags/v3.12.10:0cc8128, Apr  8 2025, 12:21:36) [MSC v.1943 64 bit (AMD64)]",
     "uv": {
@@ -8,68 +8,46 @@
       "source": "bundled",
       "version": "uv 0.11.31 (b7fdec626 2026-07-21 x86_64-pc-windows-msvc)"
     },
-    "selection": "ids:stdlib-hello,bottle-app",
-    "workers": 2,
+    "selection": "ids:pyqt5-import",
+    "workers": 1,
     "cwd": "D:\\NoraDevOps\\NoraDevOpsClient\\uvdrop",
     "disposable": true
   },
   "summary": {
-    "total": 2,
-    "ok": 2,
+    "total": 1,
+    "ok": 1,
     "failed": 0,
     "skipped": 0,
-    "wall_s": 1.37,
-    "sync_s_sum": 0.388,
-    "total_s_sum": 2.174,
-    "sync_s_median": 0.194,
-    "sync_s_p90": 0.203,
-    "parallel_speedup": 1.59,
+    "wall_s": 2.281,
+    "sync_s_sum": 0.826,
+    "total_s_sum": 2.087,
+    "sync_s_median": 0.826,
+    "sync_s_p90": 0.826,
+    "parallel_speedup": 0.91,
     "slowest": [
       {
-        "id": "bottle-app",
-        "total_s": 1.15
-      },
-      {
-        "id": "stdlib-hello",
-        "total_s": 1.024
+        "id": "pyqt5-import",
+        "total_s": 2.087
       }
     ]
   },
   "results": [
     {
-      "id": "bottle-app",
-      "tier": "light",
-      "name": "Bottle",
+      "id": "pyqt5-import",
+      "tier": "medium",
+      "name": "PyQt5 import",
       "ok": true,
       "error": "",
-      "app_key": "bench-bottle-app",
+      "app_key": "bench-pyqt5-import",
       "stdout_tail": "uvdrop-sample-ok\r\n",
       "policy_warnings": [],
       "policy_errors": [],
       "timing": {
-        "prepare_s": 0.24921080004423857,
-        "sync_s": 0.20252769999206066,
-        "run_s": 0.6908572999527678,
-        "cleanup_s": 0.007777800026815385,
-        "total_s": 1.150395100004971
-      }
-    },
-    {
-      "id": "stdlib-hello",
-      "tier": "light",
-      "name": "Stdlib hello",
-      "ok": true,
-      "error": "",
-      "app_key": "bench-stdlib-hello",
-      "stdout_tail": "hello from stdlib sample\r\nuvdrop-sample-ok\r\n",
-      "policy_warnings": [],
-      "policy_errors": [],
-      "timing": {
-        "prepare_s": 0.247244700032752,
-        "sync_s": 0.18569070001831278,
-        "run_s": 0.5835085000144318,
-        "cleanup_s": 0.007225000008475035,
-        "total_s": 1.023700900026597
+        "prepare_s": 0.1913905999972485,
+        "sync_s": 0.8262528000050224,
+        "run_s": 0.5380618999479339,
+        "cleanup_s": 0.5309721999801695,
+        "total_s": 2.0867082999902777
       }
     }
   ]

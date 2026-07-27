@@ -13,6 +13,9 @@ venv/
 .ruff_cache/
 resources/tools/**/uv.exe
 resources/tools/**/uv
+examples/local-portal/_served-catalog.json
+examples/local-portal/apps/**/_out.xlsx
+examples/local-portal/apps/**/_thumb.png
 installer/output/
 installer/msix/output/
 installer/msix/stage/

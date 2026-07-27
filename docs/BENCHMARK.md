@@ -56,6 +56,19 @@ New-Item -ItemType Directory -Force $env:UV_CACHE_DIR | Out-Null
 python scripts/bench_samples.py --tier light --workers 3
 ```
 
+### Rough timing guide (one Win11 desktop, bundled uv 0.11.x)
+
+Numbers move with network, AV, and cache. Treat as order-of-magnitude only.
+
+| Situation | What we saw |
+|---|---|
+| Warm cache, small / medium stack (e.g. already-fetched PyQt5) | `sync` often **&lt; 2 s**, end-to-end a few seconds |
+| Cold cache, light tier (pandas / plotly / sklearn / …) | individual `sync` often **minutes**; a full light pass can exceed **10–20 min** wall time |
+| stdlib-only sample | near-instant after prepare |
+| heavy (torch / TF / …) | plan for **tens of minutes** on first download |
+
+Day-to-day “feels fast” ≈ **warm uv global cache**. Hibernating a venv keeps that cache, so rebuilds stay closer to warm timings.
+
 **PyQt5 on Windows:** current `PyQt5-Qt5` releases on PyPI often omit `win_amd64` wheels. The sample pins `PyQt5-Qt5==5.15.2` (last Windows build). Prefer PySide6 when possible.
 
 ## Tiers

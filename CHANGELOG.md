@@ -21,7 +21,9 @@ This project follows [Semantic Versioning](https://semver.org/).
   （並列実行、venv 作成〜起動〜削除、グラフィカルな HTML 分析レポート、作業データの完全破棄）
 - アプリ一覧を維持したまま venv だけを削除する「環境を冬眠」。手動実行に加え、
   既定OFFの設定で未使用日数を指定した起動時GCに対応（uv グローバルキャッシュは維持）
-- `docs/CATALOG.md` / `docs/PYTHON_SUPPORT.md` / `docs/BENCHMARK.md` と `examples/uvdrop-catalog.example.json`
+- `docs/CATALOG.md` / `docs/PYTHON_SUPPORT.md` / `docs/BENCHMARK.md` / `docs/UV_RUNTIME.md` と `examples/uvdrop-catalog.example.json`
+- Win11 ローカル配布デモ: `examples/local-portal/`（多種アプリ + カタログ + 任意 HTTP 配信スクリプト）
+- README / Pages にポータルの押しポイントと速度目安（暖機 / コールドキャッシュ）を追記
 
 ### Changed
 

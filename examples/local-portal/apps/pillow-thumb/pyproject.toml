@@ -1,0 +1,11 @@
+[project]
+name = "uvdrop-portal-pillow-thumb"
+version = "0.0.1"
+description = "Pillow thumbnail smoke"
+requires-python = ">=3.11"
+dependencies = [
+    "pillow>=10.0",
+]
+
+[tool.uv]
+package = false

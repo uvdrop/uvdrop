@@ -17,6 +17,8 @@
     <div class="top-right">
       <nav>
         <a href="#features" data-i18n="nav.features">Features</a>
+        <a href="#why" data-i18n="nav.why">Why</a>
+        <a href="#speed" data-i18n="nav.speed">Speed</a>
         <a href="#catalog" data-i18n="nav.catalog">Catalog</a>
         <a href="#usage" data-i18n="nav.usage">Usage</a>
         <a href="#ops" data-i18n="nav.ops">Ops</a>
@@ -36,7 +38,7 @@
     <section class="hero">
       <p class="eyebrow" data-i18n="hero.eyebrow">Offline-first · Windows · MIT</p>
       <h1 class="logo">uvdrop</h1>
-      <p class="tag" data-i18n-html="hero.tag">Drop a folder. Run it.<br />An offline uv launcher with review before running.</p>
+      <p class="tag" data-i18n-html="hero.tag">Drop a folder. Run it.<br />A small-org app portal on top of uv — with review before running.</p>
       <div class="cta">
         <a class="btn primary" href="https://github.com/uvdrop/uvdrop" data-i18n="hero.cta.repo">View repository</a>
         <a class="btn ghost" href="https://github.com/uvdrop/uvdrop/blob/main/CHANGELOG.md" data-i18n="hero.cta.changelog">CHANGELOG</a>
@@ -92,6 +94,44 @@
       </ul>
     </section>
 
+    <section id="why" class="block">
+      <h2 data-i18n="why.title">Built as a small-org portal</h2>
+      <p class="lede" data-i18n-html="why.lede">Manage apps as uv-ready folders, publish a catalog, and let people pick and run — with the same package and Python checks every time.</p>
+      <ul class="grid">
+        <li>
+          <h3 data-i18n="why.portal.title">Catalog, not folder scan</h3>
+          <p data-i18n-html="why.portal.body">Only apps listed in the catalog appear. Admins decide what is offered; users open from the list.</p>
+        </li>
+        <li>
+          <h3 data-i18n="why.policy.title">Versions &amp; allow / block</h3>
+          <p data-i18n-html="why.policy.body">Review the full dependency tree, enforce package allow / block rules, and warn on Python support windows.</p>
+        </li>
+        <li>
+          <h3 data-i18n="why.local.title">Try on a local folder</h3>
+          <p data-i18n-html="why.local.body">Win11 demo pack under <code>examples/local-portal/</code> — no UNC share required. Optional local HTTP catalog script included.</p>
+        </li>
+      </ul>
+    </section>
+
+    <section id="speed" class="block">
+      <h2 data-i18n="speed.title">Speed expectations</h2>
+      <p class="lede" data-i18n-html="speed.lede">Day-to-day speed is mostly the <strong>warm uv cache</strong>. First download on a new PC is much slower. See <a href="https://github.com/uvdrop/uvdrop/blob/main/docs/BENCHMARK.md">docs/BENCHMARK.md</a>.</p>
+      <ul class="grid">
+        <li>
+          <h3 data-i18n="speed.warm.title">Warm cache</h3>
+          <p data-i18n="speed.warm.body">After packages are cached once, light / medium stacks often sync and start in seconds to low tens of seconds.</p>
+        </li>
+        <li>
+          <h3 data-i18n="speed.cold.title">Cold / first PC</h3>
+          <p data-i18n="speed.cold.body">Network-bound. A light-tier pass can take many minutes; heavy wheels (torch / TF / …) can take tens of minutes.</p>
+        </li>
+        <li>
+          <h3 data-i18n="speed.hibernate.title">Hibernate stays fast</h3>
+          <p data-i18n="speed.hibernate.body">Removing a venv keeps the global uv cache, so rebuilds usually feel closer to warm than to cold.</p>
+        </li>
+      </ul>
+    </section>
+
     <section id="catalog" class="block">
       <h2 data-i18n="catalog.title">Shared catalogs</h2>
       <p class="lede" data-i18n-html="catalog.lede">A catalog is a table of contents for team apps. Folders are never auto-scanned. See <a href="https://github.com/uvdrop/uvdrop/blob/main/docs/CATALOG.md">docs/CATALOG.md</a>.</p>
@@ -126,7 +166,7 @@ python -m uvdrop</code></pre>
         </li>
         <li>
           <strong data-i18n="usage.uv.title">Where uv lives</strong>
-          <p data-i18n-html="usage.uv.body">Use <code>uv</code> on PATH, or place the official binary at <code>resources/tools/windows-x64/uv.exe</code>.</p>
+          <p data-i18n-html="usage.uv.body">Use <code>uv</code> on PATH, or place the official binary at <code>resources/tools/windows-x64/uv.exe</code>. Prefer 0.11.6+. Upgrade: <a href="https://github.com/uvdrop/uvdrop/blob/main/docs/UV_RUNTIME.md">docs/UV_RUNTIME.md</a>.</p>
         </li>
         <li>
           <strong data-i18n="usage.app.title">Hand over an app</strong>
@@ -200,6 +240,7 @@ python -m uvdrop --version</code></pre>
         <ul>
           <li data-i18n="changelog.unreleased.1">Shared catalogs from files or HTTP API endpoints (no folder auto-scan)</li>
           <li data-i18n="changelog.unreleased.2">Python EOL / nearing-EOL warnings and disposable parallel uv bench HTML reports</li>
+          <li data-i18n="changelog.unreleased.3">Local portal sample pack, speed guide, and bundled-uv upgrade notes</li>
         </ul>
       </article>
       <article class="release">

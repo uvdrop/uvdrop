@@ -1,0 +1,41 @@
+{
+  "version": 1,
+  "catalog": "Local portal demo (Win11 folder)",
+  "apps": [
+    {
+      "id": "hello-stdlib",
+      "name": "Hello (stdlib)",
+      "summary": "依存なし。ポータル動作確認の基準線。",
+      "path": "apps/hello-stdlib",
+      "command": "main.py"
+    },
+    {
+      "id": "tk-counter",
+      "name": "Tk Counter",
+      "summary": "標準ライブラリの簡易 GUI。ウィンドウが開きます。",
+      "path": "apps/tk-counter",
+      "command": "main.py"
+    },
+    {
+      "id": "flask-health",
+      "name": "Flask health",
+      "summary": "Flask を import して極小アプリを組むだけのスモーク。",
+      "path": "apps/flask-health",
+      "command": "main.py"
+    },
+    {
+      "id": "csv-report",
+      "name": "CSV / XLSX report",
+      "summary": "pandas + openpyxl。表計算系アプリの入口イメージ。",
+      "path": "apps/csv-report",
+      "command": "main.py"
+    },
+    {
+      "id": "pillow-thumb",
+      "name": "Pillow thumbnail",
+      "summary": "Pillow で小さな画像を生成。画像系依存の入口イメージ。",
+      "path": "apps/pillow-thumb",
+      "command": "main.py"
+    }
+  ]
+}

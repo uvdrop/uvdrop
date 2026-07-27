@@ -2,6 +2,10 @@
 <#
 .SYNOPSIS
   Download official uv.exe into resources/tools/windows-x64/
+
+.NOTES
+  uvdrop app version ≠ uv.exe version. Prefer uv 0.11.6+ (audit / RECORD fixes).
+  See docs/UV_RUNTIME.md. Example pin: -Version 0.11.31
 #>
 param(
   [string]$Version = "latest"
@@ -36,4 +40,12 @@ Expand-Archive -Path $Zip -DestinationPath $Extract -Force
 $Found = Get-ChildItem -Path $Extract -Filter uv.exe -Recurse | Select-Object -First 1
 if (-not $Found) { throw "uv.exe not found inside zip" }
 Copy-Item $Found.FullName $Dest -Force
+$VerFile = Join-Path $DestDir "VERSION.txt"
+try {
+  $verOut = & $Dest -V 2>&1 | Out-String
+  Set-Content -Path $VerFile -Value $verOut.Trim() -Encoding UTF8
+  Write-Host "Version: $($verOut.Trim())"
+} catch {
+  Write-Host "Warning: could not write VERSION.txt ($_.Exception.Message)"
+}
 Write-Host "Installed: $Dest ($([math]::Round((Get-Item $Dest).Length/1MB,1)) MB)"

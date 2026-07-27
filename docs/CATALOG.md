@@ -69,6 +69,13 @@ API エンドポイントでも構いません。URL の末尾に `.json` は不
 HTTP カタログで相対 `path` を使う場合は、レスポンスに `base`（共有ルートなど）を書いてください。  
 フォルダの自動走査はしません。カタログが正本です。
 
+### ローカルで試す（UNC / 本番 API なし）
+
+Win11 の任意フォルダだけで配布テストするパック: [`examples/local-portal/`](../examples/local-portal/)。
+
+1. `uvdrop-catalog.json` を設定 → カタログに登録（相対 path で `apps/` 配下を起動）  
+2. HTTP だけ試したいときは同フォルダの `serve-catalog.ps1`（`base` を絶対パスに書き換えて配信）
+
 ---
 
 ## English

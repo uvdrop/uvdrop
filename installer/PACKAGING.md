@@ -46,7 +46,7 @@ powershell -ExecutionPolicy Bypass -File .\installer\build.ps1
 |--------|------|--------|
 | Python 3.11+ | 開発・PyInstaller | 既存で OK |
 | **Inno Setup 6** | Setup.exe を作る本命 | 下記 |
-| uv.exe（公式） | ランチャー同梱 | `fetch-uv.ps1` が自動取得可 |
+| uv.exe（公式） | ランチャー同梱 | `fetch-uv.ps1` が自動取得可（推奨 0.11.6+。版の話は [docs/UV_RUNTIME.md](../docs/UV_RUNTIME.md)） |
 | （任意）Windows SDK | `signtool` で署名 | Visual Studio / Build Tools |
 | （任意）コード署名証明書 | Authenticode | プライベート CA または購入 |
 
