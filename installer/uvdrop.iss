@@ -6,7 +6,7 @@
 
 #define MyAppName "uvdrop"
 ; Keep in sync with src/uvdrop/version.py (build.ps1 overrides this at build time).
-#define MyAppVersion "0.9.1"
+#define MyAppVersion "0.10.0"
 #define MyAppPublisher "uvdrop"
 #define MyAppURL "https://uvdrop.github.io/uvdrop/"
 #define MyAppExeName "uvdrop.exe"

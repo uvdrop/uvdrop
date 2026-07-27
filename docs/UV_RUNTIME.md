@@ -1,7 +1,7 @@
 # Bundled uv runtime
 
 uvdrop は公式の `uv.exe` を同梱して起動します（なければ PATH）。  
-**uvdrop のアプリ版（例: 0.9.1）と、同梱 `uv.exe` の版は別物**です。
+**uvdrop のアプリ版（例: 0.10.0）と、同梱 `uv.exe` の版は別物**です。
 
 ステータスバーに `[同梱|PATH] uv x.y.z` と出ます。迷ったらそこを見てください。
 

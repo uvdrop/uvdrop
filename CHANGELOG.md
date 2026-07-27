@@ -7,6 +7,14 @@ This project follows [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+### Planned
+
+- CI that builds Setup.exe / MSIX on tagged releases
+- Richer xlsx column mapping (Python versions sheet)
+- Partner Center 提出用アイコン差し替え・Publisher CN 固定
+
+## [0.10.0] — 2026-07-27
+
 ### Added
 
 - ショートカットの内蔵アイコンを自由な2トーン配色に対応
@@ -30,12 +38,6 @@ This project follows [Semantic Versioning](https://semver.org/).
 - 設定画面の全タブを縦スクロール対応にし、小さい画面でも全項目を操作可能に
 - 実行前のパッケージ一覧が推移依存を含むことを明記
 - 設定に「カタログ」タブを追加
-
-### Planned
-
-- CI that builds Setup.exe / MSIX on tagged releases
-- Richer xlsx column mapping (Python versions sheet)
-- Partner Center 提出用アイコン差し替え・Publisher CN 固定
 
 ## [0.9.1] — 2026-07-26
 
@@ -260,7 +262,8 @@ This project follows [Semantic Versioning](https://semver.org/).
 - Local JSON policies for package allowlist and Python versions
 - MIT license, example policies, basic tests
 
-[Unreleased]: https://github.com/uvdrop/uvdrop/compare/v0.9.1...HEAD
+[Unreleased]: https://github.com/uvdrop/uvdrop/compare/v0.10.0...HEAD
+[0.10.0]: https://github.com/uvdrop/uvdrop/compare/v0.9.1...v0.10.0
 [0.9.1]: https://github.com/uvdrop/uvdrop/compare/v0.9.0...v0.9.1
 [0.9.0]: https://github.com/uvdrop/uvdrop/compare/v0.8.0...v0.9.0
 [0.3.1]: https://github.com/uvdrop/uvdrop/releases/tag/v0.3.1
