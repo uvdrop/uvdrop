@@ -21,7 +21,7 @@ from uvdrop.project import (
     requires_python,
 )
 from uvdrop.registry import AppRecord, load_registry, remove, touch_run, upsert
-from uvdrop.uv_tool import run_detached, sync_project
+from uvdrop.uv_tool import run_detached, sync_project, find_project_python
 
 
 @dataclass
@@ -38,6 +38,9 @@ class PreparedLaunch:
     conversion_skipped: list[str] = field(default_factory=list)
     entry_command: str = ""
     entry_options: list[str] = field(default_factory=list)
+    requires_python: str | None = None
+    python_path: str | None = None
+    python_version: str | None = None
 
 
 @dataclass
@@ -166,6 +169,7 @@ def prepare_launch(
     if preferred and preferred not in options:
         options = [preferred, *options]
     entry = preferred or (options[0] if options else "")
+    py_path, py_ver = find_project_python(project_dir, venv_dir=venv_dir)
     return PreparedLaunch(
         app_key=key,
         workspace=workspace,
@@ -179,6 +183,9 @@ def prepare_launch(
         conversion_skipped=skipped,
         entry_command=entry,
         entry_options=options,
+        requires_python=req,
+        python_path=py_path,
+        python_version=py_ver,
     )
 
 
@@ -301,6 +308,7 @@ def prepare_relaunch(key: str) -> PreparedLaunch:
     options = _entry_options(workspace, project_dir)
     if rec.entry_command and rec.entry_command not in options:
         options.insert(0, rec.entry_command)
+    py_path, py_ver = find_project_python(project_dir, venv_dir=venv_dir)
     return PreparedLaunch(
         app_key=key,
         workspace=workspace,
@@ -312,6 +320,9 @@ def prepare_relaunch(key: str) -> PreparedLaunch:
         venv_dir=venv_dir,
         entry_command=rec.entry_command or (options[0] if options else ""),
         entry_options=options,
+        requires_python=req,
+        python_path=py_path,
+        python_version=py_ver,
     )
 
 

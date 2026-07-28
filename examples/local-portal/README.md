@@ -10,7 +10,7 @@ examples/local-portal/
   apps/
     hello-stdlib/         … 依存なし CLI
     tk-counter/           … Tkinter GUI（標準ライブラリ）
-    flask-health/         … Flask の極小ヘルスチェック
+    flask-health/         … Flask 常駐サーバ（URL 表示・ブラウザ確認）
     csv-report/           … pandas + openpyxl（表計算っぽい）
     pillow-thumb/         … Pillow（画像系）
     meet-av-check/        … カメラ・マイク確認（Tkinter + OpenCV + sounddevice）
@@ -27,6 +27,7 @@ examples/local-portal/
 | **Ghost Frame Recorder** | 半透明枠で任意矩形を画面録画（マイク同時） | PySide6, mss, opencv, imageio-ffmpeg |
 | **Supertonic Reader** | 原稿の TTS 読み上げ・WAV 出力 | supertonic（初回モデル DL） |
 | **OCR Bench** | 画像 OCR を複数エンジンで比較 | pytesseract, easyocr 等（Tesseract 本体は別途） |
+| **Flask health** | Flask サーバ常駐＋ブラウザ用 URL | flask |
 
 PaddleOCR / Baberu OCR / manga-ocr は `ocr-bench` の optional extras です。
 

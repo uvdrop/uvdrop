@@ -7,17 +7,24 @@ This project follows [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
-### Added
-
-- ローカルポータルに実用サンプル4本: Meet AV Check / Ghost Frame Recorder /
-  Supertonic Reader / OCR Bench（Baberu OCR 任意連携含む）
-- カタログ／フォルダ起動時の **進行状況バナー**（例: 2/4）。複数同時起動に対応
-
 ### Planned
 
 - CI that builds Setup.exe / MSIX on tagged releases
 - Richer xlsx column mapping (Python versions sheet)
 - Partner Center 提出用アイコン差し替え・Publisher CN 固定
+
+## [0.10.1] — 2026-07-29
+
+### Added
+
+- 実行前確認に **Python バージョン**（requires-python / 使用予定のインタープリタ）を表示
+- カタログ／フォルダ起動時の **進行状況バナー**（例: 2/4）。複数同時起動に対応
+- ローカルポータルに実用サンプル4本: Meet AV Check / Ghost Frame Recorder /
+  Supertonic Reader / OCR Bench（Baberu OCR 任意連携含む）
+
+### Fixed
+
+- Flask health サンプルが即終了していた問題。制御ウィンドウ＋ブラウザ用 URL を出す常駐サーバに変更
 
 ## [0.10.0] — 2026-07-27
 
@@ -268,7 +275,8 @@ This project follows [Semantic Versioning](https://semver.org/).
 - Local JSON policies for package allowlist and Python versions
 - MIT license, example policies, basic tests
 
-[Unreleased]: https://github.com/uvdrop/uvdrop/compare/v0.10.0...HEAD
+[Unreleased]: https://github.com/uvdrop/uvdrop/compare/v0.10.1...HEAD
+[0.10.1]: https://github.com/uvdrop/uvdrop/compare/v0.10.0...v0.10.1
 [0.10.0]: https://github.com/uvdrop/uvdrop/compare/v0.9.1...v0.10.0
 [0.9.1]: https://github.com/uvdrop/uvdrop/compare/v0.9.0...v0.9.1
 [0.9.0]: https://github.com/uvdrop/uvdrop/compare/v0.8.0...v0.9.0

@@ -141,6 +141,31 @@ _STRINGS: dict[str, dict[str, str]] = {
         "en": "Please review what will be installed before the environment is created.",
         "zh": "创建环境之前，请先确认以下内容。",
     },
+    "confirm.python_label": {
+        "ja": "Python バージョン",
+        "en": "Python version",
+        "zh": "Python 版本",
+    },
+    "confirm.python_req_none": {
+        "ja": "（pyproject に requires-python なし）",
+        "en": "(no requires-python in pyproject)",
+        "zh": "（pyproject 中无 requires-python）",
+    },
+    "confirm.python_body": {
+        "ja": "要求: {requires}\n使用予定: Python {version}\nインタープリタ: {path}",
+        "en": "Requires: {requires}\nWill use: Python {version}\nInterpreter: {path}",
+        "zh": "要求：{requires}\n将使用：Python {version}\n解释器：{path}",
+    },
+    "confirm.python_body_unknown": {
+        "ja": "要求: {requires}\n使用予定の版は、まだ特定できません（初回 sync 時に uv が選びます）。",
+        "en": "Requires: {requires}\nExact interpreter not resolved yet (uv picks one on first sync).",
+        "zh": "要求：{requires}\n尚未确定具体解释器（首次 sync 时由 uv 选择）。",
+    },
+    "confirm.python_warn_title": {
+        "ja": "Python に関する注意",
+        "en": "Python notes",
+        "zh": "关于 Python 的提示",
+    },
     "confirm.run": {"ja": "この内容で実行", "en": "Run with this setup", "zh": "按此内容运行"},
     "confirm.abort": {"ja": "中止", "en": "Cancel", "zh": "取消"},
     "confirm.show_console": {

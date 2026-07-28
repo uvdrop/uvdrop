@@ -19,7 +19,7 @@
     {
       "id": "flask-health",
       "name": "Flask health",
-      "summary": "Flask を import して極小アプリを組むだけのスモーク。",
+      "summary": "Flask サーバを起動し URL を表示。ブラウザで / と /health を確認（制御窓を閉じるまで常駐）。",
       "path": "apps/flask-health",
       "command": "main.py"
     },

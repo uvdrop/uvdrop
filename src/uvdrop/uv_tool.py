@@ -88,6 +88,64 @@ def run_uv(
     )
 
 
+def probe_python_version(python_exe: Path) -> str | None:
+    """Return e.g. ``3.12.10`` for an interpreter, or None on failure."""
+    if not python_exe.is_file():
+        return None
+    flags = 0
+    if os.name == "nt":
+        flags = subprocess.CREATE_NO_WINDOW  # type: ignore[attr-defined]
+    try:
+        proc = subprocess.run(
+            [str(python_exe), "-c", "import sys; print(sys.version.split()[0])"],
+            check=False,
+            text=True,
+            capture_output=True,
+            timeout=20,
+            creationflags=flags,
+        )
+    except (OSError, subprocess.TimeoutExpired):
+        return None
+    if proc.returncode != 0:
+        return None
+    line = (proc.stdout or "").strip().splitlines()
+    return line[0] if line else None
+
+
+def find_project_python(
+    project_dir: Path,
+    *,
+    venv_dir: Path | None = None,
+) -> tuple[str | None, str | None]:
+    """Best-effort Python path and version for UI display.
+
+    Prefers an existing project venv, otherwise ``uv python find``.
+    Returns ``(path, version)``; either may be None.
+    """
+    if venv_dir is not None:
+        candidates = [
+            venv_dir / "Scripts" / "python.exe",
+            venv_dir / "bin" / "python",
+            venv_dir / "bin" / "python3",
+        ]
+        for exe in candidates:
+            ver = probe_python_version(exe)
+            if ver:
+                return str(exe), ver
+
+    proc = run_uv(
+        ["python", "find", "--directory", str(project_dir)],
+        cwd=project_dir,
+        check=False,
+    )
+    if proc.returncode == 0:
+        path = (proc.stdout or "").strip().splitlines()
+        if path:
+            exe = Path(path[0].strip())
+            return str(exe), probe_python_version(exe)
+    return None, None
+
+
 def sync_project(project_dir: Path, venv_dir: Path, *, python: str | None = None) -> None:
     env = {"UV_PROJECT_ENVIRONMENT": str(venv_dir)}
     args = ["sync", "--directory", str(project_dir)]

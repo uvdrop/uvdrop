@@ -715,6 +715,36 @@ class UvdropApp(tk.Tk):
             style="Hint.TLabel",
         ).pack(anchor=tk.W, pady=(2, 10))
 
+        # Python version (always visible — package list alone was easy to miss)
+        ttk.Label(frm, text=t("confirm.python_label"), style="Section.TLabel").pack(
+            anchor=tk.W, pady=(0, 2)
+        )
+        req_txt = prep.requires_python or t("confirm.python_req_none")
+        if prep.python_version:
+            py_body = t(
+                "confirm.python_body",
+                requires=req_txt,
+                version=prep.python_version,
+                path=prep.python_path or "—",
+            )
+        else:
+            py_body = t("confirm.python_body_unknown", requires=req_txt)
+        ttk.Label(
+            frm,
+            text=py_body,
+            style="Hint.TLabel",
+            wraplength=560,
+            justify=tk.LEFT,
+        ).pack(anchor=tk.W, pady=(0, 10))
+
+        py_hits = [h for h in policy.hits if h.kind in {"python", "python_support"}]
+        if py_hits:
+            self._notice_box(
+                frm,
+                t("confirm.python_warn_title"),
+                "\n".join(h.message for h in py_hits),
+            )
+
         if prep.converted_from is not None:
             self._notice_box(
                 frm,
