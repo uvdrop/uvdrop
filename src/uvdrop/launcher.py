@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import shutil
 import zipfile
+from collections.abc import Callable
 from dataclasses import dataclass, field
 from pathlib import Path
 
@@ -197,6 +198,7 @@ def execute_launch(
     run: bool = True,
     entry_command: str | None = None,
     show_console: bool | None = None,
+    on_phase: Callable[[str], None] | None = None,
 ) -> LaunchResult:
     if prep.policy.blocking:
         raise RuntimeError("Policy blocked launch:\n" + "\n".join(prep.policy.errors))
@@ -206,7 +208,11 @@ def execute_launch(
         raise FileNotFoundError(t("err.no_command"))
 
     ensure_dotenv(prep.app_key, prep.workspace)
+    if on_phase is not None:
+        on_phase("dotenv")
     if sync:
+        if on_phase is not None:
+            on_phase("sync")
         sync_project(prep.project_dir, prep.venv_dir)
 
     mode = "keep" if keep else "temp"
@@ -231,6 +237,8 @@ def execute_launch(
 
     pid = None
     if run:
+        if on_phase is not None:
+            on_phase("run")
         entry = parse_entry(command, prep.project_dir, prep.workspace)
         proc = run_detached(
             prep.project_dir,

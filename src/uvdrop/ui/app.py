@@ -27,6 +27,7 @@ from uvdrop.sample_app import list_samples, write_sample_tree, write_sample_zip
 from uvdrop.sample_icons import PALETTE, THEMES, render_theme_png
 from uvdrop.settings import CatalogRef, ensure_default_settings, load_settings, save_settings
 from uvdrop.shortcut import create_desktop_shortcut, shortcut_path
+from uvdrop.ui.launch_activity import JobStore, LaunchJob
 from uvdrop.ui.package_table import PackageSheet
 from uvdrop.ui.tooltips import ToolTip
 from uvdrop.uv_tool import UvNotFoundError, resolve_uv_info
@@ -159,6 +160,11 @@ class UvdropApp(tk.Tk):
         )
 
         self._busy = False
+        self._jobs = JobStore()
+        self._job_rows: dict[str, dict[str, object]] = {}
+        self._activity_shell: tk.Frame | None = None
+        self._activity_body: ttk.Frame | None = None
+        self._activity_header: tk.StringVar | None = None
         self._card_widgets: list[tk.Misc] = []
         self._lib_action_btns: list[ttk.Button] = []
         self._status_frame: ttk.Frame | None = None
@@ -262,7 +268,7 @@ class UvdropApp(tk.Tk):
             cursor="hand2",
         )
         sample_link.pack(side=tk.LEFT, padx=(12, 0), pady=(2, 0))
-        sample_link.bind("<Button-1>", lambda _e: self._save_sample() if not self._busy else None)
+        sample_link.bind("<Button-1>", lambda _e: self._save_sample())
         ToolTip(sample_link, t("app.sample_link"))
 
         cards = ttk.Frame(root, style="App.TFrame")
@@ -301,11 +307,34 @@ class UvdropApp(tk.Tk):
 
         mode_row = ttk.Frame(root, style="App.TFrame")
         mode_row.pack(fill=tk.X, pady=(12, 0))
+        self._activity_anchor = mode_row
         ttk.Label(
             mode_row,
             text=t("app.hint_confirm"),
             style="Hint.TLabel",
         ).pack(side=tk.LEFT)
+
+        # --- in-progress launches (catalog / folder / zip) ---
+        self._activity_shell = tk.Frame(root, bg="#c45c26", padx=2, pady=2)
+        # packed only while jobs exist
+        inner = tk.Frame(self._activity_shell, bg="#fff4e8", padx=12, pady=10)
+        inner.pack(fill=tk.BOTH, expand=True)
+        self._activity_header = tk.StringVar(value="")
+        tk.Label(
+            inner,
+            textvariable=self._activity_header,
+            bg="#fff4e8",
+            fg="#7a2e0b",
+            font=(self.ui_font, 12, "bold"),
+            anchor=tk.W,
+        ).pack(fill=tk.X)
+        ttk.Label(
+            inner,
+            text=t("job.banner_hint"),
+            style="Hint.TLabel",
+        ).pack(anchor=tk.W, pady=(2, 6))
+        self._activity_body = ttk.Frame(inner, style="App.TFrame")
+        self._activity_body.pack(fill=tk.X)
 
         # --- step 2: library ---
         lib_hdr = ttk.Frame(root, style="App.TFrame")
@@ -453,16 +482,13 @@ class UvdropApp(tk.Tk):
         sub_lbl.pack(fill=tk.X, pady=(4, 0))
 
         def run(_e: object | None = None) -> None:
-            if not self._busy:
-                command()
+            command()
 
         for w in (body, title_lbl, sub_lbl, outer):
             w.bind("<Button-1>", run)
             self._card_widgets.append(w)
 
         def enter(_e: object | None = None) -> None:
-            if self._busy:
-                return
             for x in (body, title_lbl, sub_lbl):
                 x.configure(bg=accent_hover)
 
@@ -490,7 +516,7 @@ class UvdropApp(tk.Tk):
         else:
             self.empty_lbl.place(relx=0.5, rely=0.42, anchor=tk.CENTER)
         sel = bool(self.tree.selection())
-        state = tk.NORMAL if sel and not self._busy else tk.DISABLED
+        state = tk.NORMAL if sel else tk.DISABLED
         for b in self._lib_action_btns:
             b.configure(state=state)
 
@@ -876,8 +902,133 @@ class UvdropApp(tk.Tk):
             )
 
     def _set_busy(self, busy: bool) -> None:
-        self._busy = busy
+        # Kept for soft UI hints; launches may run in parallel via job store.
+        self._busy = busy or bool(self._jobs.active())
         self._sync_lib_actions()
+
+    def _sync_busy_from_jobs(self) -> None:
+        self._busy = bool(self._jobs.active())
+        self._sync_lib_actions()
+
+    def _refresh_activity_panel(self) -> None:
+        if self._activity_shell is None or self._activity_body is None or self._activity_header is None:
+            return
+        visible = [j for j in self._jobs.jobs.values() if j.state in {"running", "waiting"}]
+        lingering = [j for j in self._jobs.jobs.values() if j.state in {"done", "error"}]
+        if not visible and not lingering:
+            self._activity_shell.pack_forget()
+            for child in self._activity_body.winfo_children():
+                child.destroy()
+            self._job_rows.clear()
+            self._sync_busy_from_jobs()
+            return
+
+        try:
+            self._activity_shell.pack_forget()
+        except tk.TclError:
+            pass
+        anchor = getattr(self, "_activity_anchor", None)
+        if anchor is not None:
+            self._activity_shell.pack(fill=tk.X, pady=(14, 0), after=anchor)
+        else:
+            self._activity_shell.pack(fill=tk.X, pady=(14, 0))
+
+        n = len(visible) if visible else len(lingering)
+        self._activity_header.set(t("job.banner_title", n=n))
+
+        existing = set(self._job_rows)
+        current_ids = set(self._jobs.jobs)
+        for jid in list(existing - current_ids):
+            row = self._job_rows.pop(jid, None)
+            if row and isinstance(row.get("frame"), tk.Misc):
+                row["frame"].destroy()  # type: ignore[union-attr]
+
+        for job in list(self._jobs.jobs.values()):
+            self._upsert_job_row(job)
+        self._sync_busy_from_jobs()
+
+    def _upsert_job_row(self, job: LaunchJob) -> None:
+        assert self._activity_body is not None
+        row = self._job_rows.get(job.id)
+        if row is None:
+            frame = ttk.Frame(self._activity_body, style="App.TFrame")
+            frame.pack(fill=tk.X, pady=3)
+            title = tk.StringVar()
+            detail = tk.StringVar()
+            ttk.Label(frame, textvariable=title, style="Section.TLabel").pack(anchor=tk.W)
+            bar = ttk.Progressbar(frame, mode="indeterminate", length=420)
+            bar.pack(fill=tk.X, pady=(2, 0))
+            ttk.Label(frame, textvariable=detail, style="Hint.TLabel").pack(anchor=tk.W)
+            row = {"frame": frame, "title": title, "detail": detail, "bar": bar}
+            self._job_rows[job.id] = row
+            bar.start(12)
+
+        title_var = row["title"]
+        detail_var = row["detail"]
+        bar = row["bar"]
+        assert isinstance(title_var, tk.StringVar)
+        assert isinstance(detail_var, tk.StringVar)
+        assert isinstance(bar, ttk.Progressbar)
+
+        title_var.set(t("job.row_title", name=job.title, progress=job.progress_label))
+        detail_var.set(job.detail)
+        if job.state == "waiting":
+            try:
+                bar.stop()
+            except tk.TclError:
+                pass
+            bar.configure(mode="determinate", maximum=job.total, value=job.step)
+        elif job.state in {"running"}:
+            if str(bar.cget("mode")) != "indeterminate":
+                bar.configure(mode="indeterminate")
+                bar.start(12)
+        else:
+            try:
+                bar.stop()
+            except tk.TclError:
+                pass
+            bar.configure(mode="determinate", maximum=job.total, value=job.total if job.state == "done" else job.step)
+
+    def _job_begin(self, title: str, *, detail: str) -> str:
+        job = self._jobs.start(title, detail=detail)
+        self._refresh_activity_panel()
+        self._log(t("job.log_start", name=title))
+        return job.id
+
+    def _job_phase(self, job_id: str, step: int, detail: str, *, waiting: bool = False) -> None:
+        def apply() -> None:
+            self._jobs.update(
+                job_id,
+                step=step,
+                detail=detail,
+                state="waiting" if waiting else "running",
+            )
+            job = self._jobs.jobs.get(job_id)
+            if job:
+                self._upsert_job_row(job)
+            self._refresh_activity_panel()
+
+        self.after(0, apply)
+
+    def _job_finish(self, job_id: str, *, ok: bool, detail: str) -> None:
+        def apply() -> None:
+            self._jobs.finish(job_id, state="done" if ok else "error", detail=detail)
+            job = self._jobs.jobs.get(job_id)
+            if job:
+                job.step = job.total
+                self._upsert_job_row(job)
+            self._refresh_activity_panel()
+            # Remove finished row shortly so the banner stays readable then clears.
+            self.after(2500, lambda: self._job_dismiss(job_id))
+
+        self.after(0, apply)
+
+    def _job_dismiss(self, job_id: str) -> None:
+        self._jobs.remove(job_id)
+        row = self._job_rows.pop(job_id, None)
+        if row and isinstance(row.get("frame"), tk.Misc):
+            row["frame"].destroy()  # type: ignore[union-attr]
+        self._refresh_activity_panel()
 
     def _launch_async(
         self,
@@ -885,10 +1036,10 @@ class UvdropApp(tk.Tk):
         *,
         app_key: str | None = None,
         preferred_command: str | None = None,
+        title: str | None = None,
     ) -> None:
-        if self._busy:
-            return
-        self._set_busy(True)
+        label = (title or source.name).strip() or str(source)
+        job_id = self._job_begin(label, detail=t("job.phase_prepare"))
         self._log(f"launch: {source}")
 
         def work_prepare() -> None:
@@ -905,7 +1056,7 @@ class UvdropApp(tk.Tk):
 
             def after_prep() -> None:
                 if err or prep is None:
-                    self._set_busy(False)
+                    self._job_finish(job_id, ok=False, detail=t("job.phase_error", err=str(err)))
                     self._log(f"error: {err}")
                     messagebox.showerror("uvdrop", str(err))
                     return
@@ -915,9 +1066,10 @@ class UvdropApp(tk.Tk):
                     f"policy: warnings={len(prep.policy.warnings)} errors={len(prep.policy.errors)}"
                 )
                 self._log(f"venv will be: {prep.venv_dir}")
+                self._job_phase(job_id, 2, t("job.phase_confirm"), waiting=True)
                 confirmed = self._confirm_launch(prep)
                 if confirmed is None:
-                    self._set_busy(False)
+                    self._job_finish(job_id, ok=False, detail=t("job.phase_aborted"))
                     self._log("aborted before venv sync")
                     return
                 command, show_console = confirmed
@@ -928,23 +1080,34 @@ class UvdropApp(tk.Tk):
                 def work_run() -> None:
                     run_err: Exception | None = None
                     result = None
+
+                    def on_phase(phase: str) -> None:
+                        if phase == "sync":
+                            self._job_phase(job_id, 3, t("job.phase_sync"))
+                        elif phase == "run":
+                            self._job_phase(job_id, 4, t("job.phase_run"))
+                        elif phase == "dotenv":
+                            self._job_phase(job_id, 3, t("job.phase_dotenv"))
+
                     try:
                         result = execute_launch(
                             prep,
                             keep=True,
                             entry_command=command,
                             show_console=show_console,
+                            on_phase=on_phase,
                         )
                     except Exception as e:  # noqa: BLE001
                         run_err = e
 
                     def done() -> None:
-                        self._set_busy(False)
                         if run_err:
+                            self._job_finish(job_id, ok=False, detail=t("job.phase_error", err=str(run_err)))
                             self._log(f"error: {run_err}")
                             messagebox.showerror("uvdrop", str(run_err))
                             return
                         assert result is not None
+                        self._job_finish(job_id, ok=True, detail=t("job.phase_done"))
                         self._log(
                             f"ok: key={result.app_key} pid={result.pid} mode={result.mode} "
                             f"venv={result.venv_dir}"
@@ -962,8 +1125,6 @@ class UvdropApp(tk.Tk):
 
     def _open_catalog(self) -> None:
         """List apps from registered catalog JSON files (no folder scanning)."""
-        if self._busy:
-            return
         win = tk.Toplevel(self)
         win.title(t("catalog.win_title"))
         win.transient(self)
@@ -1040,12 +1201,14 @@ class UvdropApp(tk.Tk):
             except (OSError, ValueError, FileNotFoundError) as e:
                 messagebox.showerror(t("catalog.win_title"), str(e), parent=win)
                 return
-            win.destroy()
+            status.set(t("catalog.queued", name=app.name))
             self._log(f"catalog: {app.name} → {target}")
+            self.lift()
             self._launch_async(
                 target,
                 app_key=app.app_key_hint,
                 preferred_command=app.command or None,
+                title=app.name,
             )
 
         tree.bind("<Double-1>", open_selected)
@@ -1465,9 +1628,10 @@ class UvdropApp(tk.Tk):
         if not key:
             messagebox.showinfo("uvdrop", t("dlg.select_app"))
             return
-        if self._busy:
-            return
-        self._set_busy(True)
+        apps = load_registry()
+        rec = apps.get(key)
+        title = rec.name if rec else key
+        job_id = self._job_begin(title, detail=t("job.phase_prepare"))
         self._log(f"relaunch: {key}")
 
         def work_prepare() -> None:
@@ -1480,13 +1644,14 @@ class UvdropApp(tk.Tk):
 
             def after_prep() -> None:
                 if err or prep is None:
-                    self._set_busy(False)
+                    self._job_finish(job_id, ok=False, detail=t("job.phase_error", err=str(err)))
                     self._log(f"error: {err}")
                     messagebox.showerror("uvdrop", str(err))
                     return
+                self._job_phase(job_id, 2, t("job.phase_confirm"), waiting=True)
                 confirmed = self._confirm_launch(prep)
                 if confirmed is None:
-                    self._set_busy(False)
+                    self._job_finish(job_id, ok=False, detail=t("job.phase_aborted"))
                     self._log("aborted before venv sync")
                     return
                 command, show_console = confirmed
@@ -1494,23 +1659,36 @@ class UvdropApp(tk.Tk):
                 def work_run() -> None:
                     run_err: Exception | None = None
                     result = None
+
+                    def on_phase(phase: str) -> None:
+                        if phase == "sync":
+                            self._job_phase(job_id, 3, t("job.phase_sync"))
+                        elif phase == "run":
+                            self._job_phase(job_id, 4, t("job.phase_run"))
+                        elif phase == "dotenv":
+                            self._job_phase(job_id, 3, t("job.phase_dotenv"))
+
                     try:
                         result = execute_launch(
                             prep,
                             keep=True,
                             entry_command=command,
                             show_console=show_console,
+                            on_phase=on_phase,
                         )
                     except Exception as e:  # noqa: BLE001
                         run_err = e
 
                     def done() -> None:
-                        self._set_busy(False)
                         if run_err:
+                            self._job_finish(
+                                job_id, ok=False, detail=t("job.phase_error", err=str(run_err))
+                            )
                             self._log(f"error: {run_err}")
                             messagebox.showerror("uvdrop", str(run_err))
                             return
                         assert result is not None
+                        self._job_finish(job_id, ok=True, detail=t("job.phase_done"))
                         self._log(f"ok: key={result.app_key} pid={result.pid}")
                         self._refresh_list()
 

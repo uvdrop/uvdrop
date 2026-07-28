@@ -11,6 +11,7 @@ This project follows [Semantic Versioning](https://semver.org/).
 
 - ローカルポータルに実用サンプル4本: Meet AV Check / Ghost Frame Recorder /
   Supertonic Reader / OCR Bench（Baberu OCR 任意連携含む）
+- カタログ／フォルダ起動時の **進行状況バナー**（例: 2/4）。複数同時起動に対応
 
 ### Planned
 

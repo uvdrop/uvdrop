@@ -63,7 +63,7 @@
   "catalog.step3.title": "在设置中注册",
   "catalog.step3.body": "设置 → 目录 → 添加文件路径或端点 URL（可多个）。",
   "catalog.step4.title": "从目录打开",
-  "catalog.step4.body": "主界面 → 从目录打开 → 选择应用。访问 path、必需文件校验与运行前确认照常进行。",
+  "catalog.step4.body": "主界面 → 从目录打开 → 选择应用。主窗口会显示进度（导入→确认→环境→启动）。可同时启动多个。",
   "usage.title": "用法",
   "usage.dev.title": "从源码运行",
   "usage.uv.title": "放置 uv",

@@ -63,7 +63,7 @@
   "catalog.step3.title": "Register in Settings",
   "catalog.step3.body": "Settings → Catalogs → add a file path or endpoint URL (multiple catalogs OK).",
   "catalog.step4.title": "Open from catalog",
-  "catalog.step4.body": "Main screen → Open from catalog → pick an app. Path access, required-file checks, and review dialogs still run.",
+  "catalog.step4.body": "Main screen → Open from catalog → pick an app. Progress (import → review → env → start) appears on the main window. Multiple launches at once are OK.",
   "usage.title": "Usage",
   "usage.dev.title": "Run from source",
   "usage.uv.title": "Where uv lives",

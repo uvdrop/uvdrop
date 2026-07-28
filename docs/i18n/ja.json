@@ -63,7 +63,7 @@
   "catalog.step3.title": "設定に登録",
   "catalog.step3.body": "設定 → カタログ で、ファイルパスまたはエンドポイント URL を追加します（複数可）。",
   "catalog.step4.title": "カタログから開く",
-  "catalog.step4.body": "メイン画面の「カタログから開く」で一覧から選択。path へのアクセス、必要ファイル確認、実行前の確認は通常どおり動きます。",
+  "catalog.step4.body": "メイン画面の「カタログから開く」で一覧から選択。起動中はメイン画面に進行状況（取り込み→確認→環境作成→起動）が出ます。複数同時起動もできます。",
   "usage.title": "使い方",
   "usage.dev.title": "開発実行",
   "usage.uv.title": "uv の配置",

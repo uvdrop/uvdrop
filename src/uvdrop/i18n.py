@@ -1352,6 +1352,71 @@ _STRINGS: dict[str, dict[str, str]] = {
     "catalog.col_path": {"ja": "置き場", "en": "Location", "zh": "位置"},
     "catalog.run": {"ja": "このアプリを開く", "en": "Open this app", "zh": "打开此应用"},
     "catalog.refresh": {"ja": "再読込", "en": "Reload", "zh": "重新加载"},
+    "catalog.queued": {
+        "ja": "「{name}」の起動を開始しました。メイン画面の進行状況を見てください（複数同時も可）。",
+        "en": "Started “{name}”. Watch progress on the main window (multiple launches OK).",
+        "zh": "已开始启动“{name}”。请查看主窗口进度（可同时启动多个）。",
+    },
+    "job.banner_title": {
+        "ja": "起動の進行状況（{n} 件）— しばらくお待ちください",
+        "en": "Launch in progress ({n}) — please wait",
+        "zh": "启动进行中（{n}）— 请稍候",
+    },
+    "job.banner_hint": {
+        "ja": "コピー・実行前確認・環境作成（uv sync）・起動の順です。カタログから複数同時に開けます。",
+        "en": "Order: copy → review → create env (uv sync) → start. You can open several from the catalog at once.",
+        "zh": "顺序：复制 → 运行前确认 → 创建环境（uv sync） → 启动。可从目录同时打开多个。",
+    },
+    "job.row_title": {
+        "ja": "{name}  —  {progress}",
+        "en": "{name}  —  {progress}",
+        "zh": "{name}  —  {progress}",
+    },
+    "job.log_start": {
+        "ja": "進行状況: 「{name}」の起動を開始",
+        "en": "progress: starting “{name}”",
+        "zh": "进度：开始启动“{name}”",
+    },
+    "job.phase_prepare": {
+        "ja": "1/4 取り込みとポリシー確認…（時間がかかることがあります）",
+        "en": "1/4 Importing and checking policy… (may take a while)",
+        "zh": "1/4 正在导入并检查策略…（可能需要一些时间）",
+    },
+    "job.phase_confirm": {
+        "ja": "2/4 実行前の確認ダイアログを待っています…",
+        "en": "2/4 Waiting for the review-before-running dialog…",
+        "zh": "2/4 等待运行前确认对话框…",
+    },
+    "job.phase_dotenv": {
+        "ja": "3/4 専用 .env を準備…",
+        "en": "3/4 Preparing dedicated .env…",
+        "zh": "3/4 正在准备专用 .env…",
+    },
+    "job.phase_sync": {
+        "ja": "3/4 仮想環境を作成 / 同期中（uv sync）… 初回は数分かかることがあります",
+        "en": "3/4 Creating / syncing the venv (uv sync)… first time may take minutes",
+        "zh": "3/4 正在创建/同步虚拟环境（uv sync）… 首次可能需要几分钟",
+    },
+    "job.phase_run": {
+        "ja": "4/4 アプリを起動しています…",
+        "en": "4/4 Starting the app…",
+        "zh": "4/4 正在启动应用…",
+    },
+    "job.phase_done": {
+        "ja": "完了 — アプリを起動しました",
+        "en": "Done — app started",
+        "zh": "完成 — 应用已启动",
+    },
+    "job.phase_aborted": {
+        "ja": "キャンセルしました（実行前確認で中止）",
+        "en": "Cancelled (stopped at review)",
+        "zh": "已取消（在运行前确认时中止）",
+    },
+    "job.phase_error": {
+        "ja": "失敗: {err}",
+        "en": "Failed: {err}",
+        "zh": "失败：{err}",
+    },
     "catalog.none": {
         "ja": "表示できるアプリがありません。設定でカタログ JSON を登録してください。",
         "en": "No apps to show. Register a catalog JSON in Settings.",
@@ -1431,19 +1496,19 @@ _STRINGS: dict[str, dict[str, str]] = {
         "ja": (
             "カタログ JSON は共有アプリの「目次」です。自動でフォルダを走査しません。\n"
             "ファイルパス、または同じ形式の JSON を返す HTTP(S) API エンドポイントを登録できます。\n"
-            "URL の末尾は .json でなくても構いません。各項目の path に初めてアクセスしたとき、\n"
-            "必要ファイルの検証と実行前の確認が動きます。詳しくは docs/CATALOG.md。"
+            "URL の末尾は .json でなくても構いません。各項目を開くと、メイン画面に進行状況\n"
+            "（取り込み→確認→環境作成→起動）が出ます。複数同時に開けます。docs/CATALOG.md。"
         ),
         "en": (
             "A catalog JSON is a table of contents for shared apps. Folders are not scanned.\n"
             "Register a file path or an HTTP(S) API endpoint returning the same JSON schema;\n"
-            "the URL does not need a .json suffix. The first time a path is opened,\n"
-            "required-file checks and the review dialog run as usual. See docs/CATALOG.md."
+            "the URL does not need a .json suffix. Opening an app shows progress on the main\n"
+            "window (import → review → env → start). Multiple launches at once are OK. See docs/CATALOG.md."
         ),
         "zh": (
             "目录 JSON 是共享应用的“目录表”。不会自动扫描文件夹。\n"
             "可注册文件路径或返回相同 JSON 格式的 HTTP(S) API 端点；URL 无需以 .json 结尾。\n"
-            "首次访问 path 时，会进行必需文件校验并显示运行前确认。\n"
+            "打开应用时，主窗口会显示进度（导入→确认→环境→启动）。可同时启动多个。\n"
             "详见 docs/CATALOG.md。"
         ),
     },

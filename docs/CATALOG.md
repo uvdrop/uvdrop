@@ -60,6 +60,8 @@ uvdrop does **not** auto-scan folders. It only lists apps declared in registered
    **または** 同じ JSON 形をレスポンス本文として返す HTTPS API エンドポイントを用意する  
 3. 利用者の uvdrop → 設定 → カタログ に **ファイルパス** または **URL** を追加して保存  
 4. メイン画面の「カタログから開く」で一覧 → 実行  
+   起動中はメイン画面に **進行状況バナー**（例: `2/4 実行前の確認…`）が出ます。  
+   カタログ窓は閉じず、複数アプリを同時に起動できます。
 
 HTTP 側は静的な `.json` URL でも、`GET https://portal.example/api/catalogs/team-a` のような
 API エンドポイントでも構いません。URL の末尾に `.json` は不要です。認証が不要、または
@@ -76,6 +78,11 @@ Win11 の任意フォルダだけで配布テストするパック: [`examples/l
 1. `uvdrop-catalog.json` を設定 → カタログに登録（相対 path で `apps/` 配下を起動）  
 2. HTTP だけ試したいときは同フォルダの `serve-catalog.ps1`（`base` を絶対パスに書き換えて配信）
 
+### 起動の所要時間について
+
+初回は依存のダウンロードで数分かかることがあります。進行状況が見えないと失敗したように見えるため、
+uvdrop はメイン画面にオレンジ枠の進行状況を出します（並列起動にも対応）。
+
 ---
 
 ## English
@@ -85,6 +92,7 @@ Win11 の任意フォルダだけで配布テストするパック: [`examples/l
 - Admins write a catalog JSON (name, summary, start command, path)
 - Users register catalog file paths or catalog API endpoints in Settings (multiple allowed)
 - Pick an app → then access `path` → validate required files → **existing launch guards unchanged** → run
+- While launching, the main window shows a progress banner (e.g. `2/4`). Multiple catalog launches can run in parallel.
 
 Being listed in a catalog does **not** bypass allow / block lists or the review dialog.
 
