@@ -10,6 +10,13 @@
       "command": "main.py"
     },
     {
+      "id": "web-demo",
+      "name": "Web demo ({port})",
+      "summary": "{port} is replaced with a free TCP port at launch; also sets PORT / UVDROP_PORT.",
+      "path": "web-demo",
+      "command": "main.py --port {port}"
+    },
+    {
       "name": "Report tool (UNC example)",
       "summary": "Replace with a real share path in your environment.",
       "path": "\\\\fileserver\\uvdrop-apps\\report-tool",

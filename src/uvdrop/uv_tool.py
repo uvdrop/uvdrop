@@ -165,6 +165,7 @@ def run_detached(
     *,
     waitable: bool = False,
     show_console: bool | None = None,
+    env_extra: dict[str, str] | None = None,
 ) -> subprocess.Popen[bytes]:
     """Start app via uv run.
 
@@ -174,12 +175,17 @@ def run_detached(
     show_console=None reads settings.guard.show_console.
     False (default): hide the black console window.
     True: open a new console so stdout/stderr are visible for debugging.
+
+    env_extra merges into the child environment (e.g. PORT / UVDROP_PORT).
     """
     if show_console is None:
         show_console = bool(load_settings().guard.show_console)
 
     uv = resolve_uv()
-    env = _base_env({"UV_PROJECT_ENVIRONMENT": str(venv_dir)})
+    merged = {"UV_PROJECT_ENVIRONMENT": str(venv_dir)}
+    if env_extra:
+        merged.update(env_extra)
+    env = _base_env(merged)
     creationflags = 0
     if os.name == "nt":
         if show_console:

@@ -17,6 +17,14 @@ examples/local-portal/
     ghost-frame-recorder/ … 画面領域録画オーバーレイ（PySide6 + mss）
     supertonic-reader/    … Supertonic 読み上げ（初回 ~400MB DL）
     ocr-bench/            … 複数 OCR エンジン比較
+    diff-shot/            … Before/After 差分（見た目重視）
+    clip-factory/         … クリップボード画像工場
+    praise-card/          … ありがとうカード生成（空気づくり）
+    rename-preview/       … プレビュー付き一括リネーム
+    size-map/             … フォルダ容量ツリーマップ
+    qr-flip/              … QRパラパラ近接転写
+    outlook-draft/        … Outlook COM 下書き
+    one-min-retro/        … 1分 Keep/Problem/Try
 ```
 
 ### 追加ツール（実用サンプル）
@@ -26,8 +34,22 @@ examples/local-portal/
 | **Meet AV Check** | 会議前にカメラ映像・マイク音量を確認 | opencv-python-headless, sounddevice, pillow |
 | **Ghost Frame Recorder** | 半透明枠で任意矩形を画面録画（マイク同時） | PySide6, mss, opencv, imageio-ffmpeg |
 | **Supertonic Reader** | 原稿の TTS 読み上げ・WAV 出力 | supertonic（初回モデル DL） |
-| **OCR Bench** | 画像 OCR を複数エンジンで比較 | pytesseract, easyocr 等（Tesseract 本体は別途） |
+| **OCR Bench** | RapidOCR + EasyOCR 比較（pip のみ） | rapidocr-onnxruntime, easyocr |
 | **Flask health** | Flask サーバ常駐＋ブラウザ用 URL | flask |
+| **Diff Shot** | Before/After 差分ヒートマップ | PySide6, Pillow, numpy |
+| **Clip Factory** | クリップボード画像のトリム／幅そろえ | PySide6, Pillow |
+| **Praise Card** | 貼れる讃めカード生成 | PySide6, Pillow |
+| **Rename Preview** | 一括リネームを表で確認してから実行 | PySide6 |
+| **Size Map** | フォルダ容量を色つき地図で可視化 | PySide6 |
+| **QR Flip** | QRパラパラで近傍テキスト転写 | PySide6, qrcode, OpenCV |
+| **Outlook Draft** | Outlook 下書きを COM で開く | PySide6, pywin32 |
+| **1-min Retro** | Keep/Problem/Try 一枚絵 | PySide6, Pillow |
+
+見た目の引きと、**全画面＋STEP＋次の操作STATUS**で迷子にならない体験を優先しています。
+
+各アプリには `ui_shell.py`（最大化・ステップ文言）が同梱されます（uvdrop 取り込み後も単体で動くため）。
+
+第一陣（資料・日常）＋第二陣（地図／ワンダー／COM／空気）＋入口サンプルを同一 UX 規約で揃えています。
 
 PaddleOCR / Baberu OCR / manga-ocr は `ocr-bench` の optional extras です。
 

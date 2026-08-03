@@ -1,7 +1,7 @@
 [project]
 name = "uvdrop-portal-flask-health"
 version = "0.0.1"
-description = "Flask import + tiny app object (no long-running server)"
+description = "Flask health server with control window; respects --port / PORT"
 requires-python = ">=3.11"
 dependencies = [
     "flask>=3.0",

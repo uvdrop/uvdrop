@@ -13,6 +13,7 @@ from uvdrop.cleanup import schedule_cleanup_after
 from uvdrop.i18n import t
 from uvdrop.paths import apps_dir, envs_dir, ensure_layout, slugify
 from uvdrop.policy import PolicyReport, evaluate_policies
+from uvdrop.portutil import expand_port_placeholders, port_environ
 from uvdrop.project import (
     entry_candidates,
     find_pyproject,
@@ -214,6 +215,12 @@ def execute_launch(
     if run and not command:
         raise FileNotFoundError(t("err.no_command"))
 
+    # Expand {port} just before spawn so concurrent launches each get a free port.
+    # Registry keeps the template (with {port}) when the user typed one; resolved
+    # digits are only for this process.
+    launch_command, allocated_port = expand_port_placeholders(command)
+    env_extra = port_environ(allocated_port) if allocated_port is not None else None
+
     ensure_dotenv(prep.app_key, prep.workspace)
     if on_phase is not None:
         on_phase("dotenv")
@@ -233,6 +240,7 @@ def execute_launch(
             source_path=str(prep.source),
             workspace=str(prep.workspace),
             mode=mode,
+            # Persist the template so relaunch keeps getting fresh ports.
             entry_command=command,
             icon_path=previous.icon_path if previous else "",
         )
@@ -246,13 +254,14 @@ def execute_launch(
     if run:
         if on_phase is not None:
             on_phase("run")
-        entry = parse_entry(command, prep.project_dir, prep.workspace)
+        entry = parse_entry(launch_command, prep.project_dir, prep.workspace)
         proc = run_detached(
             prep.project_dir,
             prep.venv_dir,
             entry,
             waitable=not keep,
             show_console=show_console,
+            env_extra=env_extra,
         )
         pid = proc.pid
         upsert(record())

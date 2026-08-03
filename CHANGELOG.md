@@ -13,6 +13,24 @@ This project follows [Semantic Versioning](https://semver.org/).
 - Richer xlsx column mapping (Python versions sheet)
 - Partner Center 提出用アイコン差し替え・Publisher CN 固定
 
+## [0.11.0] — 2026-08-04
+
+### Added
+
+- 起動コマンドの **`{port}` プレースホルダ**: 起動直前に空き TCP ポートへ置換。
+  同時に `PORT` / `UVDROP_PORT` を子プロセスへ渡す（例: `main.py --port {port}`）
+- ローカルポータル第二陣: Size Map / QR Flip / Outlook Draft / 1-min Retro /
+  Diff Shot / Clip Factory / Praise Card / Rename Preview
+
+### Changed
+
+- UI のビジュアルを刷新（スレート＋ティール、カード型ヒーロー、Treeview 選択色）
+- OCR Bench を **pip のみ**の RapidOCR + EasyOCR に再構成
+  （Tesseract / Paddle / HuggingFace Baberu / manga-ocr を既定から外す）
+- Flask health が `{port}` / `PORT` を尊重。カタログ例も更新
+- ローカルポータル全サンプルを **全画面＋STEP＋次操作STATUS** で統一
+- hello / tk-counter / csv-report / pillow-thumb の意味づけと完了 UI を強化
+
 ## [0.10.1] — 2026-07-29
 
 ### Added

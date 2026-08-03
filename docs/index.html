@@ -43,7 +43,7 @@
         <a class="btn primary" href="https://github.com/uvdrop/uvdrop" data-i18n="hero.cta.repo">View repository</a>
         <a class="btn ghost" href="https://github.com/uvdrop/uvdrop/blob/main/CHANGELOG.md" data-i18n="hero.cta.changelog">CHANGELOG</a>
       </div>
-      <p class="ver" id="site-version" data-i18n="hero.version">current: v0.10.1</p>
+      <p class="ver" id="site-version" data-i18n="hero.version">current: v0.11.0</p>
       <p class="hero-dl" data-i18n-html="hero.dl"><a href="https://github.com/uvdrop/uvdrop/releases">Get Setup.exe from GitHub Releases</a> · <a href="https://github.com/uvdrop/uvdrop/blob/main/docs/DISTRIBUTION.md">Three distribution paths</a></p>
     </section>
 
@@ -58,6 +58,10 @@
         <li>
           <h3 data-i18n="features.catalog.title">Shared catalogs</h3>
           <p data-i18n-html="features.catalog.body">Register catalog files or HTTP API endpoints. Open listed apps with the same review / allow / block guards.</p>
+        </li>
+        <li>
+          <h3 data-i18n="features.port.title">{port} allocation</h3>
+          <p data-i18n-html="features.port.body">Replace <code>{port}</code> in the launch command with a free TCP port, and set <code>PORT</code> / <code>UVDROP_PORT</code>.</p>
         </li>
         <li>
           <h3 data-i18n="features.env.title">Dedicated settings file</h3>
@@ -239,6 +243,13 @@ python -m uvdrop --version</code></pre>
         <h3><span data-i18n="changelog.unreleased.title">Unreleased</span></h3>
         <ul>
           <li data-i18n="changelog.unreleased.empty">See Planned items in CHANGELOG.md</li>
+        </ul>
+      </article>
+      <article class="release">
+        <h3><span data-i18n="changelog.0110.title">v0.11.0</span> <time datetime="2026-08-04">2026-08-04</time></h3>
+        <ul>
+          <li data-i18n="changelog.0110.1">{port} in launch commands allocates a free TCP port (also sets PORT / UVDROP_PORT)</li>
+          <li data-i18n="changelog.0110.2">UI refresh, pip-only OCR Bench, portal samples with fullscreen STEP flows</li>
         </ul>
       </article>
       <article class="release">

@@ -5,64 +5,120 @@
     {
       "id": "hello-stdlib",
       "name": "Hello (stdlib)",
-      "summary": "依存なし。ポータル動作確認の基準線。",
+      "summary": "【はじめの一歩】依存なし。uvdropの起動ルートを説明する基準線（全画面）。",
       "path": "apps/hello-stdlib",
       "command": "main.py"
     },
     {
       "id": "tk-counter",
       "name": "Tk Counter",
-      "summary": "標準ライブラリの簡易 GUI。ウィンドウが開きます。",
+      "summary": "【GUI入口】標準ライブラリだけで窓＋操作できることを確認（全画面・STEP表示）。",
       "path": "apps/tk-counter",
       "command": "main.py"
     },
     {
       "id": "flask-health",
       "name": "Flask health",
-      "summary": "Flask サーバを起動し URL を表示。ブラウザで / と /health を確認（制御窓を閉じるまで常駐）。",
+      "summary": "【Web】制御窓フル画面。{port}自動割当→ブラウザ→/health。閉じると停止。",
       "path": "apps/flask-health",
-      "command": "main.py"
+      "command": "main.py --port {port}"
     },
     {
       "id": "csv-report",
       "name": "CSV / XLSX report",
-      "summary": "pandas + openpyxl。表計算系アプリの入口イメージ。",
+      "summary": "【表計算】書き出し結果を画面で見せてからエクスプローラーへ（迷子防止）。",
       "path": "apps/csv-report",
       "command": "main.py"
     },
     {
       "id": "pillow-thumb",
       "name": "Pillow thumbnail",
-      "summary": "Pillow で小さな画像を生成。画像系依存の入口イメージ。",
+      "summary": "【画像入口】生成→大きなプレビュー→保存先の把握まで一連表示。",
       "path": "apps/pillow-thumb",
       "command": "main.py"
     },
     {
       "id": "meet-av-check",
       "name": "Meet AV Check",
-      "summary": "リモート会議前のカメラ・マイク確認。プレビューとレベルメータ、2秒録音テスト。",
+      "summary": "【会議前】カメラ映像→マイクレベル→2秒録音。STEP付き全画面。",
       "path": "apps/meet-av-check",
       "command": "main.py"
     },
     {
       "id": "ghost-frame-recorder",
       "name": "Ghost Frame Recorder",
-      "summary": "半透明枠で画面領域を選び録画。PySide6 オーバーレイ＋マイク同時録音。",
+      "summary": "【資料録画】枠を置く→録画→一覧。コントロール窓は全画面。",
       "path": "apps/ghost-frame-recorder",
       "command": "main.py"
     },
     {
       "id": "supertonic-reader",
       "name": "Supertonic Reader",
-      "summary": "Supertonic による読み上げ。原稿編集・声/速度/間の調整・WAV 書き出し。",
+      "summary": "【読み上げ】原稿→再生→WAV。初回DLあり。STEP付き全画面。",
       "path": "apps/supertonic-reader",
       "command": "main.py"
     },
     {
       "id": "ocr-bench",
       "name": "OCR Bench",
-      "summary": "Tesseract / PyOCR / EasyOCR / Paddle / Baberu 等を一括比較。ボックス連動チェック付き。",
+      "summary": "【OCR】画像を開く→RapidOCR/EasyOCR実行→結果比較（pipのみ・全画面）。",
       "path": "apps/ocr-bench",
+      "command": "main.py"
+    },
+    {
+      "id": "diff-shot",
+      "name": "Diff Shot",
+      "summary": "【差分】Ctrl+VでBEFORE/AFTER→位置補正→ヒートマップ（全画面STEP）。",
+      "path": "apps/diff-shot",
+      "command": "main.py"
+    },
+    {
+      "id": "clip-factory",
+      "name": "Clip Factory",
+      "summary": "【貼付工場】取込→加工プレビュー→コピー戻し。次の操作を常に表示。",
+      "path": "apps/clip-factory",
+      "command": "main.py"
+    },
+    {
+      "id": "praise-card",
+      "name": "Praise Card",
+      "summary": "【空気づくり】名前と一言→カード生成→コピー。STEP付き全画面。",
+      "path": "apps/praise-card",
+      "command": "main.py"
+    },
+    {
+      "id": "rename-preview",
+      "name": "Rename Preview",
+      "summary": "【リネーム】フォルダ選択→Before/After確認→実行。安全側の全画面UI。",
+      "path": "apps/rename-preview",
+      "command": "main.py"
+    },
+    {
+      "id": "size-map",
+      "name": "Size Map",
+      "summary": "【容量地図】フォルダ選択→色地図→クリックで潜る。次アクション常時表示。",
+      "path": "apps/size-map",
+      "command": "main.py"
+    },
+    {
+      "id": "qr-flip",
+      "name": "QR Flip",
+      "summary": "【近接転写】送信でQR作成→受信で一括読取が確実。カメラ/画像も可。",
+      "path": "apps/qr-flip",
+      "command": "main.py"
+    },
+    {
+      "id": "outlook-draft",
+      "name": "Outlook Draft",
+      "summary": "【COM連携】宛先・件名・本文→Outlook下書き。未導入時も案内を表示。",
+      "path": "apps/outlook-draft",
+      "command": "main.py"
+    },
+    {
+      "id": "one-min-retro",
+      "name": "1-min Retro",
+      "summary": "【ふりかえり】Keep/Problem/Try→一枚絵。サーバに残さない全画面ボード。",
+      "path": "apps/one-min-retro",
       "command": "main.py"
     }
   ]

@@ -1,47 +1,77 @@
-"""OCR Bench — compare multiple OCR engines side by side."""
+"""OCR Bench — pip-only RapidOCR + EasyOCR comparison (visual-first)."""
 from __future__ import annotations
 
 import threading
 import tkinter as tk
-from pathlib import Path
 from tkinter import filedialog, messagebox, ttk
 
 from PIL import Image, ImageTk
 
 from engines import EngineSpec, OcrBox, OcrResult, discover_engines, run_engine
+from ui_shell import apply_tk_theme, format_steps, maximize_tk
+
+BG = "#0B1020"
+PANEL = "#151A2E"
+INK = "#E8EEFF"
+MUTED = "#8FA0C0"
+ACCENT = "#4D96FF"
+STEPS = ("画像を開く", "エンジンを実行", "結果を比較")
 
 ENGINE_COLORS = {
-    "tesseract": "#2563eb",
-    "pyocr": "#7c3aed",
-    "easyocr": "#059669",
-    "paddleocr": "#dc2626",
-    "baberu": "#db2777",
-    "manga_ocr": "#d97706",
+    "rapidocr": "#6BCB77",
+    "easyocr": "#FFD93D",
 }
 
 
 class OcrBenchApp:
     def __init__(self, root: tk.Tk) -> None:
         self.root = root
-        self.root.title("OCR Bench — エンジン比較")
-        self.root.geometry("1100x720")
-
+        self.root.title("OCR Bench")
+        apply_tk_theme(root, bg=BG, ink=INK)
+        maximize_tk(root)
         self.image: Image.Image | None = None
         self.photo: ImageTk.PhotoImage | None = None
         self.scale = 1.0
         self.results: dict[str, OcrResult] = {}
         self.engine_vars: dict[str, tk.BooleanVar] = {}
         self.engine_specs: list[EngineSpec] = list(discover_engines())
-        self._render_job: str | None = None
-
         self._build_ui()
 
     def _build_ui(self) -> None:
+        style = ttk.Style(self.root)
+        try:
+            style.theme_use("clam")
+        except tk.TclError:
+            pass
+        style.configure(".", background=BG, foreground=INK)
+        style.configure("TFrame", background=BG)
+        style.configure("TLabel", background=BG, foreground=INK)
+        style.configure("TCheckbutton", background=PANEL, foreground=INK)
+        style.configure("TButton", padding=10)
+        style.configure("TNotebook", background=BG)
+        style.configure("TNotebook.Tab", padding=(14, 8))
+        style.configure("Steps.TLabel", font=("Yu Gothic UI", 11, "bold"), background=PANEL, foreground=ACCENT)
+        style.configure("Status.TLabel", font=("Yu Gothic UI", 11), background=PANEL, foreground=INK)
+
+        head = ttk.Frame(self.root, padding=(20, 16))
+        head.pack(fill=tk.X)
+        ttk.Label(head, text="OCR Bench", font=("Yu Gothic UI", 22, "bold")).pack(anchor=tk.W)
+        ttk.Label(
+            head,
+            text="pip だけで動くエンジンだけ。RapidOCR（軽め）と EasyOCR（日英・初回DL）。",
+            foreground=MUTED,
+        ).pack(anchor=tk.W)
+
+        self.steps_var = tk.StringVar(value=format_steps(STEPS, 1))
+        self.status_var = tk.StringVar(value="次: 「画像を開く」で比較したい画像を選ぶ")
+        ttk.Label(head, textvariable=self.steps_var, style="Steps.TLabel").pack(fill=tk.X, pady=(10, 6))
+        ttk.Label(head, textvariable=self.status_var, style="Status.TLabel", wraplength=1000).pack(fill=tk.X)
+
         outer = ttk.Panedwindow(self.root, orient=tk.HORIZONTAL)
-        outer.pack(fill=tk.BOTH, expand=True, padx=8, pady=8)
+        outer.pack(fill=tk.BOTH, expand=True, padx=16, pady=(0, 16))
 
         left = ttk.Frame(outer, padding=4)
-        right = ttk.Frame(outer, padding=4)
+        right = tk.Frame(outer, bg=PANEL, padx=12, pady=12)
         outer.add(left, weight=3)
         outer.add(right, weight=2)
 
@@ -50,33 +80,27 @@ class OcrBenchApp:
         ttk.Button(load_row, text="画像を開く", command=self.load_image).pack(side=tk.LEFT)
         ttk.Button(load_row, text="選択エンジンを実行", command=self.run_selected).pack(side=tk.LEFT, padx=8)
 
-        self.canvas = tk.Canvas(left, bg="#222", highlightthickness=0)
+        self.canvas = tk.Canvas(left, bg="#070B16", highlightthickness=0)
         self.canvas.pack(fill=tk.BOTH, expand=True, pady=8)
         self.canvas.bind("<Button-1>", self.on_canvas_click)
 
-        legend = ttk.LabelFrame(left, text="凡例（クリックで強調）", padding=6)
-        legend.pack(fill=tk.X)
-        self.legend_var = tk.StringVar(value="—")
-        ttk.Label(legend, textvariable=self.legend_var, wraplength=520).pack(anchor=tk.W)
+        self.legend_var = tk.StringVar(value="ボックスをクリックするとテキストを強調")
+        ttk.Label(left, textvariable=self.legend_var, wraplength=520, foreground=MUTED).pack(anchor=tk.W)
 
-        engines_frame = ttk.LabelFrame(right, text="エンジン", padding=8)
-        engines_frame.pack(fill=tk.X)
+        tk.Label(right, text="エンジン", bg=PANEL, fg=INK, font=("Yu Gothic UI", 12, "bold")).pack(anchor=tk.W)
         for spec in self.engine_specs:
             var = tk.BooleanVar(value=spec.available)
             self.engine_vars[spec.engine_id] = var
             state = tk.NORMAL if spec.available else tk.DISABLED
             label = spec.label if spec.available else f"{spec.label} — 利用不可"
-            cb = ttk.Checkbutton(engines_frame, text=label, variable=var, state=state)
-            cb.pack(anchor=tk.W)
+            cb = ttk.Checkbutton(right, text=label, variable=var, state=state)
+            cb.pack(anchor=tk.W, pady=2)
             if not spec.available and spec.note:
-                ttk.Label(engines_frame, text=f"  ↳ {spec.note[:120]}", wraplength=360).pack(anchor=tk.W)
+                tk.Label(right, text=f"  {spec.note[:100]}", bg=PANEL, fg=MUTED, wraplength=320).pack(anchor=tk.W)
 
         self.notebook = ttk.Notebook(right)
-        self.notebook.pack(fill=tk.BOTH, expand=True, pady=8)
+        self.notebook.pack(fill=tk.BOTH, expand=True, pady=10)
         self.text_widgets: dict[str, tk.Text] = {}
-
-        self.status_var = tk.StringVar(value="画像を読み込んでください。")
-        ttk.Label(right, textvariable=self.status_var, wraplength=420).pack(anchor=tk.W)
 
     def load_image(self) -> None:
         path = filedialog.askopenfilename(
@@ -91,113 +115,95 @@ class OcrBenchApp:
             self.notebook.forget(tab)
         self.text_widgets.clear()
         self._render_canvas()
-        self.status_var.set(f"読み込み: {path}")
+        self.steps_var.set(format_steps(STEPS, 2))
+        self.status_var.set(f"読み込み: {path} — 次: エンジンを選び「選択エンジンを実行」")
 
     def _render_canvas(self, highlight_engine: str | None = None, highlight_box: OcrBox | None = None) -> None:
         if self.image is None:
             return
         canvas_w = max(self.canvas.winfo_width(), 400)
         canvas_h = max(self.canvas.winfo_height(), 300)
-        img = self.image.copy()
-        self.scale = min(canvas_w / img.width, canvas_h / img.height, 1.0)
-        disp = img.resize(
-            (max(1, int(img.width * self.scale)), max(1, int(img.height * self.scale))),
-            Image.Resampling.LANCZOS,
-        )
+        iw, ih = self.image.size
+        self.scale = min(canvas_w / iw, canvas_h / ih, 1.0)
+        disp = self.image.resize((max(1, int(iw * self.scale)), max(1, int(ih * self.scale))))
         self.photo = ImageTk.PhotoImage(disp)
         self.canvas.delete("all")
-        self.canvas.create_image(0, 0, anchor=tk.NW, image=self.photo, tags="base")
-
-        legend_parts: list[str] = []
-        for engine_id, result in self.results.items():
-            if result.error:
-                continue
-            color = ENGINE_COLORS.get(engine_id, "#ffffff")
-            legend_parts.append(f"{result.label}: {color}")
+        self.canvas.create_image(0, 0, anchor=tk.NW, image=self.photo)
+        for eng, result in self.results.items():
+            color = ENGINE_COLORS.get(eng, "#fff")
+            width = 3 if eng == highlight_engine else 2
             for box in result.boxes:
-                x1 = int(box.x * self.scale)
-                y1 = int(box.y * self.scale)
-                x2 = int((box.x + box.w) * self.scale)
-                y2 = int((box.y + box.h) * self.scale)
-                width = 3 if highlight_engine == engine_id and highlight_box is box else 1
-                self.canvas.create_rectangle(x1, y1, x2, y2, outline=color, width=width, tags=engine_id)
+                x1 = box.x * self.scale
+                y1 = box.y * self.scale
+                x2 = (box.x + box.w) * self.scale
+                y2 = (box.y + box.h) * self.scale
+                if highlight_box is box:
+                    width = 4
+                self.canvas.create_rectangle(x1, y1, x2, y2, outline=color, width=width)
 
-        self.legend_var.set(" / ".join(legend_parts) if legend_parts else "ボックス付き結果がここに表示されます")
+    def on_canvas_click(self, event: tk.Event) -> None:
+        if not self.results:
+            return
+        x, y = event.x / self.scale, event.y / self.scale
+        for eng, result in self.results.items():
+            for box in result.boxes:
+                if box.x <= x <= box.x + box.w and box.y <= y <= box.y + box.h:
+                    self.legend_var.set(f"[{eng}] {box.text}")
+                    self._render_canvas(highlight_engine=eng, highlight_box=box)
+                    tab = self.text_widgets.get(eng)
+                    if tab is not None:
+                        for i, tid in enumerate(self.notebook.tabs()):
+                            if self.notebook.nametowidget(tid) == tab.master:
+                                self.notebook.select(i)
+                                break
+                    return
 
     def run_selected(self) -> None:
         if self.image is None:
-            messagebox.showinfo("OCR", "先に画像を開いてください。")
+            messagebox.showinfo("画像", "先に画像を開いてください。")
             return
         selected = [eid for eid, var in self.engine_vars.items() if var.get()]
         if not selected:
-            messagebox.showinfo("OCR", "エンジンを1つ以上選んでください。")
+            messagebox.showinfo("エンジン", "1つ以上選んでください。")
             return
-        self.status_var.set("OCR 実行中…")
+        self.steps_var.set(format_steps(STEPS, 2))
+        self.status_var.set("実行中…（初回はモデル取得で時間がかかることがあります）")
+        image = self.image.copy()
 
-        def task() -> None:
-            for engine_id in selected:
-                result = run_engine(engine_id, self.image)  # type: ignore[arg-type]
+        def work() -> None:
+            for eid in selected:
+                result = run_engine(eid, image)
                 self.root.after(0, lambda r=result: self._apply_result(r))
-            self.root.after(0, lambda: self.status_var.set("完了"))
+            self.root.after(0, self._done)
 
-        threading.Thread(target=task, daemon=True).start()
+        threading.Thread(target=work, daemon=True).start()
+
+    def _done(self) -> None:
+        self.steps_var.set(format_steps(STEPS, 3))
+        self.status_var.set("完了 — 右タブと色付きボックスでエンジン結果を比較してください")
 
     def _apply_result(self, result: OcrResult) -> None:
         self.results[result.engine_id] = result
-        existing = self.text_widgets.get(result.engine_id)
-        if existing is not None:
-            try:
-                self.notebook.forget(existing["frame"])
-            except tk.TclError:
-                pass
-        frame = ttk.Frame(self.notebook)
-        text = tk.Text(frame, wrap=tk.WORD, height=12)
-        text.pack(fill=tk.BOTH, expand=True)
-        if result.error:
-            body = f"エラー:\n{result.error}"
+        if result.engine_id in self.text_widgets:
+            tw = self.text_widgets[result.engine_id]
+            tw.delete("1.0", tk.END)
         else:
-            body = f"所要: {result.elapsed_sec:.2f}s\n\n{result.text}"
-            if not result.boxes:
-                body += "\n\n（このエンジンは文字範囲ボックスを返しません）"
-        text.insert("1.0", body)
-        text.configure(state=tk.DISABLED)
-        self.notebook.add(frame, text=result.label[:18])
-        self.text_widgets[result.engine_id] = {"frame": frame, "text": text}
+            frame = ttk.Frame(self.notebook)
+            tw = tk.Text(frame, wrap=tk.WORD, bg="#070B16", fg=INK, insertbackground=INK, relief=tk.FLAT)
+            tw.pack(fill=tk.BOTH, expand=True)
+            self.notebook.add(frame, text=result.engine_id)
+            self.text_widgets[result.engine_id] = tw
+        if result.error:
+            self.text_widgets[result.engine_id].insert(tk.END, f"ERROR\n{result.error}")
+        else:
+            header = f"{result.label}\n{result.elapsed_sec:.2f}s · boxes={len(result.boxes)}\n\n"
+            self.text_widgets[result.engine_id].insert(tk.END, header + result.text)
         self._render_canvas()
-
-    def on_canvas_click(self, event: tk.Event) -> None:  # noqa: ANN001
-        if self.image is None or not self.results:
-            return
-        x = event.x / self.scale
-        y = event.y / self.scale
-        best: tuple[str, OcrBox] | None = None
-        best_area = None
-        for engine_id, result in self.results.items():
-            for box in result.boxes:
-                if box.x <= x <= box.x + box.w and box.y <= y <= box.y + box.h:
-                    area = box.w * box.h
-                    if best is None or area < best_area:  # type: ignore[operator]
-                        best = (engine_id, box)
-                        best_area = area
-        if best is None:
-            return
-        engine_id, box = best
-        self._render_canvas(highlight_engine=engine_id, highlight_box=box)
-        self.status_var.set(f"{self.results[engine_id].label}: {box.text}")
 
 
 def main() -> int:
     root = tk.Tk()
-    app = OcrBenchApp(root)
-
-    def on_configure(_event: tk.Event) -> None:  # noqa: ANN001
-        if app.image is None:
-            return
-        if app._render_job is not None:
-            root.after_cancel(app._render_job)
-        app._render_job = root.after(120, app._render_canvas)
-
-    root.bind("<Configure>", on_configure)
+    OcrBenchApp(root)
     print("uvdrop-portal-ok ocr-bench", flush=True)
     root.mainloop()
     return 0

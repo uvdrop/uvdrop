@@ -1,0 +1,12 @@
+[project]
+name = "uvdrop-portal-praise-card"
+version = "0.0.1"
+description = "Big thank-you / praise card generator for workplace vibes"
+requires-python = ">=3.11"
+dependencies = [
+    "pyside6>=6.5",
+    "pillow>=10.0",
+]
+
+[tool.uv]
+package = false

@@ -129,25 +129,28 @@ def _scrollable_panel(
 
 
 class UvdropApp(tk.Tk):
-    # palette — soft, low-contrast surfaces with a calm green accent
-    BG = "#f4f7f5"
+    # palette — crisp slate surfaces, teal accent (not the old soft-green clam look)
+    BG = "#eef2f6"
     CARD = "#ffffff"
-    CARD_BORDER = "#d8e2dc"
-    INK = "#25322c"
-    MUTED = "#69796f"
-    ACCENT = "#2f7d62"
-    ACCENT_HOVER = "#276a53"
-    ACCENT_ZIP = "#2f6f8a"
-    ACCENT_ZIP_HOVER = "#255a70"
-    ACCENT_CATALOG = "#6b5b8a"
-    ACCENT_CATALOG_HOVER = "#564870"
-    WARN = "#8a5a1a"
+    CARD_BORDER = "#d7dee8"
+    INK = "#0f172a"
+    MUTED = "#64748b"
+    ACCENT = "#0d9488"
+    ACCENT_HOVER = "#0f766e"
+    ACCENT_ZIP = "#0284c7"
+    ACCENT_ZIP_HOVER = "#0369a1"
+    ACCENT_CATALOG = "#334155"
+    ACCENT_CATALOG_HOVER = "#1e293b"
+    WARN = "#b45309"
+    ACTIVITY_EDGE = "#f59e0b"
+    ACTIVITY_BG = "#fffbeb"
+    ACTIVITY_INK = "#92400e"
 
     def __init__(self) -> None:
         super().__init__()
         self.title(f"uvdrop {__version__}")
-        self.geometry("1000x720")
-        self.minsize(820, 600)
+        self.geometry("1080x740")
+        self.minsize(880, 640)
         self.configure(bg=self.BG)
         ensure_layout()
         settings = ensure_default_settings()
@@ -201,31 +204,58 @@ class UvdropApp(tk.Tk):
         self.option_add("*Font", body)
         style.configure(".", font=body, background=self.BG, foreground=self.INK)
         style.configure("App.TFrame", background=self.BG)
-        style.configure("Title.TLabel", font=(self.ui_font, 22, "bold"), background=self.BG, foreground=self.INK)
+        style.configure(
+            "Title.TLabel",
+            font=(self.ui_font, 26, "bold"),
+            background=self.BG,
+            foreground=self.INK,
+        )
         style.configure("Sub.TLabel", font=(self.ui_font, 11), background=self.BG, foreground=self.MUTED)
         style.configure("Section.TLabel", font=(self.ui_font, 13, "bold"), background=self.BG, foreground=self.INK)
         style.configure("Hint.TLabel", font=(self.ui_font, 10), background=self.BG, foreground=self.MUTED)
         style.configure("Status.TLabel", font=(self.ui_font, 10), background=self.BG, foreground=self.MUTED)
         style.configure("TCheckbutton", background=self.BG, foreground=self.INK)
         style.configure("TRadiobutton", background=self.BG, foreground=self.INK)
-        style.configure("TButton", padding=(14, 7), background="#e6ede9", foreground=self.INK)
-        style.map("TButton", background=[("active", "#d9e5df"), ("disabled", "#eef2f0")])
-        style.configure("Ghost.TButton", padding=(12, 6))
+        style.configure("TButton", padding=(16, 8), background="#e2e8f0", foreground=self.INK)
+        style.map("TButton", background=[("active", "#cbd5e1"), ("disabled", "#f1f5f9")])
+        style.configure("Ghost.TButton", padding=(12, 7), background=self.BG, foreground=self.MUTED)
+        style.map("Ghost.TButton", background=[("active", "#e2e8f0")], foreground=[("active", self.INK)])
         style.configure(
             "Primary.TButton",
-            padding=(16, 8),
+            padding=(18, 9),
             background=self.ACCENT,
             foreground="#ffffff",
             font=(self.ui_font, 11, "bold"),
         )
         style.map("Primary.TButton", background=[("active", self.ACCENT_HOVER)])
-        style.configure("Treeview", rowheight=28, fieldbackground=self.CARD, background=self.CARD)
-        style.configure("Treeview.Heading", font=(self.ui_font, 10, "bold"))
-        style.configure("TNotebook", background=self.BG)
-        style.configure("TNotebook.Tab", padding=(16, 8), font=(self.ui_font, 11))
+        style.configure(
+            "Treeview",
+            rowheight=34,
+            fieldbackground=self.CARD,
+            background=self.CARD,
+            foreground=self.INK,
+            borderwidth=0,
+        )
+        style.configure(
+            "Treeview.Heading",
+            font=(self.ui_font, 10, "bold"),
+            background="#f8fafc",
+            foreground=self.MUTED,
+            relief="flat",
+        )
+        style.map(
+            "Treeview",
+            background=[("selected", "#ccfbf1")],
+            foreground=[("selected", self.INK)],
+        )
+        style.configure("TNotebook", background=self.BG, borderwidth=0)
+        style.configure("TNotebook.Tab", padding=(18, 9), font=(self.ui_font, 11))
+        style.map("TNotebook.Tab", background=[("selected", self.CARD)], foreground=[("selected", self.INK)])
+        style.configure("TEntry", padding=6, fieldbackground=self.CARD)
+        style.configure("TCombobox", padding=5, fieldbackground=self.CARD)
 
     def _build(self) -> None:
-        root = ttk.Frame(self, style="App.TFrame", padding=(18, 14))
+        root = ttk.Frame(self, style="App.TFrame", padding=(24, 18))
         root.pack(fill=tk.BOTH, expand=True)
         self._root_frame = root
 
@@ -315,16 +345,16 @@ class UvdropApp(tk.Tk):
         ).pack(side=tk.LEFT)
 
         # --- in-progress launches (catalog / folder / zip) ---
-        self._activity_shell = tk.Frame(root, bg="#c45c26", padx=2, pady=2)
+        self._activity_shell = tk.Frame(root, bg=self.ACTIVITY_EDGE, padx=2, pady=2)
         # packed only while jobs exist
-        inner = tk.Frame(self._activity_shell, bg="#fff4e8", padx=12, pady=10)
+        inner = tk.Frame(self._activity_shell, bg=self.ACTIVITY_BG, padx=14, pady=12)
         inner.pack(fill=tk.BOTH, expand=True)
         self._activity_header = tk.StringVar(value="")
         tk.Label(
             inner,
             textvariable=self._activity_header,
-            bg="#fff4e8",
-            fg="#7a2e0b",
+            bg=self.ACTIVITY_BG,
+            fg=self.ACTIVITY_INK,
             font=(self.ui_font, 12, "bold"),
             anchor=tk.W,
         ).pack(fill=tk.X)
@@ -465,38 +495,46 @@ class UvdropApp(tk.Tk):
         accent_hover: str,
     ) -> None:
         outer = tk.Frame(parent, bg=self.CARD_BORDER, padx=1, pady=1)
-        outer.grid(row=0, column=col, sticky="nsew", padx=(0 if col == 0 else 8, 0))
-        bg = accent
-        fg = "#ffffff"
-        sub_fg = "#e4f0ea"
-        body = tk.Frame(outer, bg=bg, cursor="hand2", padx=16, pady=18)
-        body.pack(fill=tk.BOTH, expand=True)
+        outer.grid(row=0, column=col, sticky="nsew", padx=(0 if col == 0 else 10, 0))
+        shell = tk.Frame(outer, bg=accent)
+        shell.pack(fill=tk.BOTH, expand=True)
+        # Modern card: colored left rail + light body
+        rail = tk.Frame(shell, bg=accent, width=6)
+        rail.pack(side=tk.LEFT, fill=tk.Y)
+        body = tk.Frame(shell, bg=self.CARD, cursor="hand2", padx=18, pady=20)
+        body.pack(side=tk.LEFT, fill=tk.BOTH, expand=True)
 
         title_lbl = tk.Label(
-            body, text=title, bg=bg, fg=fg, font=(self.ui_font, 15, "bold"), anchor=tk.W
+            body, text=title, bg=self.CARD, fg=self.INK, font=(self.ui_font, 15, "bold"), anchor=tk.W
         )
         title_lbl.pack(fill=tk.X)
         sub_lbl = tk.Label(
-            body, text=subtitle, bg=bg, fg=sub_fg, font=(self.ui_font, 10), anchor=tk.W
+            body, text=subtitle, bg=self.CARD, fg=self.MUTED, font=(self.ui_font, 10), anchor=tk.W,
+            justify=tk.LEFT, wraplength=260,
         )
-        sub_lbl.pack(fill=tk.X, pady=(4, 0))
+        sub_lbl.pack(fill=tk.X, pady=(6, 0))
 
         def run(_e: object | None = None) -> None:
             command()
 
-        for w in (body, title_lbl, sub_lbl, outer):
+        hover_bg = "#f8fafc"
+        for w in (body, title_lbl, sub_lbl, outer, shell, rail):
             w.bind("<Button-1>", run)
             self._card_widgets.append(w)
 
         def enter(_e: object | None = None) -> None:
-            for x in (body, title_lbl, sub_lbl):
-                x.configure(bg=accent_hover)
+            body.configure(bg=hover_bg)
+            title_lbl.configure(bg=hover_bg)
+            sub_lbl.configure(bg=hover_bg)
+            rail.configure(bg=accent_hover)
 
         def leave(_e: object | None = None) -> None:
-            for x in (body, title_lbl, sub_lbl):
-                x.configure(bg=accent)
+            body.configure(bg=self.CARD)
+            title_lbl.configure(bg=self.CARD)
+            sub_lbl.configure(bg=self.CARD)
+            rail.configure(bg=accent)
 
-        for w in (body, title_lbl, sub_lbl):
+        for w in (body, title_lbl, sub_lbl, rail):
             w.bind("<Enter>", enter)
             w.bind("<Leave>", leave)
 

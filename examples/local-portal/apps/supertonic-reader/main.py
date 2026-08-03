@@ -11,13 +11,17 @@ import sounddevice as sd
 import soundfile as sf
 
 from tts_engine import LANGS, VOICES, TtsEngine
+from ui_shell import apply_tk_theme, format_steps, maximize_tk
+
+STEPS = ("原稿を入れる", "再生する", "必要ならWAV書き出し")
 
 
 class SupertonicReaderApp:
     def __init__(self, root: tk.Tk) -> None:
         self.root = root
         self.root.title("Supertonic Reader — 読み上げ")
-        self.root.geometry("720x560")
+        apply_tk_theme(root)
+        maximize_tk(root)
 
         self.engine = TtsEngine()
         self._playing = False
@@ -26,14 +30,27 @@ class SupertonicReaderApp:
         self._worker: threading.Thread | None = None
 
         self._build_ui()
-        self.status_var.set("初回の「再生」でモデルをダウンロードします（約400MB）。")
+        self.set_status("次: 原稿を確認（または開く）→ 「再生」。初回はモデルDL（約400MB）。")
 
     def _build_ui(self) -> None:
-        outer = ttk.Frame(self.root, padding=12)
+        outer = ttk.Frame(self.root, padding=16)
         outer.pack(fill=tk.BOTH, expand=True)
 
+        ttk.Label(outer, text="Supertonic Reader", style="Hero.TLabel").pack(anchor=tk.W)
+        ttk.Label(
+            outer,
+            text="原稿を入れて再生。初回はモデル取得があります。",
+            style="Sub.TLabel",
+            wraplength=960,
+        ).pack(anchor=tk.W, pady=(4, 10))
+
+        self.steps_var = tk.StringVar(value=format_steps(STEPS, 1))
+        self.status_var = tk.StringVar(value="")
+        ttk.Label(outer, textvariable=self.steps_var, style="Steps.TLabel").pack(fill=tk.X, pady=(0, 8))
+        ttk.Label(outer, textvariable=self.status_var, style="Status.TLabel", wraplength=960).pack(fill=tk.X)
+
         toolbar = ttk.Frame(outer)
-        toolbar.pack(fill=tk.X, pady=(0, 8))
+        toolbar.pack(fill=tk.X, pady=(12, 8))
         ttk.Button(toolbar, text="テキストを開く", command=self.load_file).pack(side=tk.LEFT)
         ttk.Button(toolbar, text="保存", command=self.save_text).pack(side=tk.LEFT, padx=6)
 
@@ -78,11 +95,11 @@ class SupertonicReaderApp:
         ttk.Button(actions, text="停止", command=self.stop).pack(side=tk.LEFT, padx=8)
         ttk.Button(actions, text="WAV 書き出し", command=self.export_wav).pack(side=tk.LEFT)
 
-        self.status_var = tk.StringVar(value="")
-        ttk.Label(outer, textvariable=self.status_var, wraplength=680).pack(anchor=tk.W, pady=(8, 0))
-
     def set_status(self, message: str) -> None:
         self.root.after(0, lambda: self.status_var.set(message))
+
+    def set_step(self, step: int) -> None:
+        self.root.after(0, lambda: self.steps_var.set(format_steps(STEPS, step)))
 
     def load_file(self) -> None:
         path = filedialog.askopenfilename(
@@ -94,7 +111,8 @@ class SupertonicReaderApp:
         text = Path(path).read_text(encoding="utf-8")
         self.text.delete("1.0", tk.END)
         self.text.insert("1.0", text)
-        self.set_status(f"読み込み: {path}")
+        self.set_step(1)
+        self.set_status(f"読み込み: {path} — 次: 「再生」")
 
     def save_text(self) -> None:
         path = filedialog.asksaveasfilename(
@@ -118,6 +136,9 @@ class SupertonicReaderApp:
         if self._worker and self._worker.is_alive():
             return
 
+        self.set_step(2)
+        self.set_status("準備中…")
+
         def task() -> None:
             try:
                 result = self.engine.synthesize(
@@ -133,7 +154,8 @@ class SupertonicReaderApp:
                 self.set_status("再生中…")
                 sd.play(result.audio, result.samplerate)
                 sd.wait()
-                self.set_status("再生が完了しました。")
+                self.set_step(3)
+                self.set_status("再生が完了しました — 必要なら「WAV 書き出し」")
             except Exception as exc:  # noqa: BLE001
                 self.root.after(0, lambda: messagebox.showerror("TTS エラー", str(exc)))
                 self.set_status(f"エラー: {exc}")
@@ -157,6 +179,8 @@ class SupertonicReaderApp:
         )
         if not dest:
             return
+
+        self.set_step(3)
 
         def task() -> None:
             try:

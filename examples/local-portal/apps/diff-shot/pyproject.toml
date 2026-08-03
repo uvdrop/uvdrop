@@ -1,0 +1,14 @@
+[project]
+name = "uvdrop-portal-diff-shot"
+version = "0.0.1"
+description = "Before/After screenshot diff with big visual preview"
+requires-python = ">=3.11"
+dependencies = [
+    "pyside6>=6.5",
+    "pillow>=10.0",
+    "numpy>=1.24",
+    "opencv-python-headless>=4.8",
+]
+
+[tool.uv]
+package = false

@@ -49,9 +49,33 @@ uvdrop does **not** auto-scan folders. It only lists apps declared in registered
 | `apps[].name` | 必須 | 一覧に出す名前 |
 | `apps[].path` | 必須 | フォルダまたは `.zip` の場所（絶対 / UNC / カタログ相対） |
 | `apps[].summary` | 任意 | 短い説明 |
-| `apps[].command` | 任意 | 実行前確認の起動コマンドに事前入力 |
+| `apps[].command` | 任意 | 実行前確認の起動コマンドに事前入力。`{port}` を含めると起動時に空きポートへ置換 |
 | `apps[].id` | 任意 | 取り込みキー用の安定 ID |
 | `base` | HTTP+相対 path 時に推奨 | 相対 `path` の基準（絶対 / UNC） |
+
+### `{port}` プレースホルダ
+
+Web 系アプリでポート衝突を避けるとき、起動コマンドに `{port}`（大文字小文字不問）を書けます。
+
+```json
+"command": "main.py --port {port}"
+```
+
+uvdrop は起動直前に空き TCP ポート（既定は 8000 付近から走査）を選び、
+
+1. コマンド内の `{port}` を数字に置換して実行  
+2. あわせて環境変数 `UVDROP_PORT` と `PORT` を子プロセスへ渡す  
+
+テンプレート（`{port}` 付き）はレジストリに残るので、再起動のたびに別ポートを取れます。  
+アプリ側は `--port` を読むか、`os.environ["PORT"]` を読んでください。
+
+例:
+
+```text
+main.py --port {port}
+-m uvicorn app:app --host 127.0.0.1 --port {port}
+-m streamlit run app.py --server.port {port}
+```
 
 ### 運用
 
@@ -99,6 +123,10 @@ Being listed in a catalog does **not** bypass allow / block lists or the review 
 ### Fields
 
 See the JSON example above. `path` may be absolute, UNC (`\\server\share\...`), or relative to the catalog file (or `base` for HTTP catalogs). Register either a local file path or any `https://…` API endpoint returning this schema; a `.json` suffix is not required. `command` pre-fills the review dialog only.
+
+### `{port}` placeholder
+
+Put `{port}` in `command` (e.g. `main.py --port {port}`). At launch, uvdrop picks a free TCP port, substitutes it into the command, and sets `PORT` / `UVDROP_PORT` on the child process. The template with `{port}` is kept in the registry so relaunches get a fresh port.
 
 ---
 
